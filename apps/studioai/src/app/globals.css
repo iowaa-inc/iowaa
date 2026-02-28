@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@repo/foundation";
+
+@source "../../../../packages/ui-core/src/components";

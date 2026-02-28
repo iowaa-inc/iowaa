@@ -6,15 +6,22 @@
   "tailwind": {
     "config": "",
     "css": "src/styles/globals.css",
-    "baseColor": "neutral",
-    "cssVariables": true
+    "baseColor": "zinc",
+    "cssVariables": true,
+    "prefix": ""
   },
-  "iconLibrary": "lucide",
+  "iconLibrary": "remixicon",
+  "rtl": false,
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@repo/ui-core/components",
     "utils": "@repo/ui-core/lib/utils",
     "hooks": "@repo/ui-core/hooks",
     "lib": "@repo/ui-core/lib",
     "ui": "@repo/ui-core/components"
+  },
+  "registries": {
+    "@reui": "https://reui.io/r/{style}/{name}.json"
   }
 }

@@ -1,0 +1,107 @@
+Understanding the context attached and then your understanding of Shadcn sidebar component, create a layout dashboard layout with this specification.
+
+
+
+- 3 panel layout, left and right are fixed size but middle fills to fill the remaining width
+
+- layout fills the width and heigh of viewport, each panel uses h-screen, then a scroll-area from shadcn for vertical scroll behavour
+
+- a bar at the top, the bar should be 80px height and full width 
+
+- inside the 2 panels at the left and right, they should each have a header section and footer section (bottom), each of 80px height.
+
+- then in the middle panel we should have a header bar which should also be of 80px height
+
+- then in the middle panel we should have a bottom bar should be 200px height and has an expand icon that when clicked will open and close its panel.
+
+
+Understanding the provided context on Shadcn's sidebar component and its implementation, create a dashboard layout with these specifications:
+- 3-panel layout where left and right panels are fixed-width, and the middle panel fills the remaining width.
+- Layout fills the full viewport width and height; each panel uses h-screen with a Shadcn scroll-area for vertical scrolling.
+- Top bar spanning full width, 80px height.
+- Left and right panels each include a header (top, 80px height) and footer (bottom, 80px height).
+- Middle panel includes a header bar (80px height) and a bottom bar (200px height) with an expand icon that toggles the bottom bar's open/closed state.
+
+
+
+import { SidebarLeft } from "@/components/sidebar-left"
+import { SidebarRight } from "@/components/sidebar-right"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@repo/ui-core/components/breadcrumb"
+import { Separator } from "@repo/ui-core/components/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@repo/ui-core/components/sidebar"
+
+export default function WorkspaceLayout() {
+  return (
+    <div
+      data-sidebar-root
+      className="flex min-h-svh w-full"
+      style={{
+        "--sidebar-width": "16rem",
+        "--sidebar-left-width": "16rem",
+        "--sidebar-right-width": "16rem",
+      } as React.CSSProperties}
+    >
+      <SidebarProvider
+        className="flex-1 min-w-0"
+        variableName="--sidebar-left-width"
+      >
+        <SidebarLeft />
+        <SidebarInset
+          className="pr-[calc(var(--sidebar-right-width))]"
+          style={{
+            transition: "padding-right 200ms ease-linear",
+          } as React.CSSProperties}
+        >
+          {/* <header className="bg-background sticky top-0 flex h-14 shrink-0 items-center gap-2">
+          <div className="flex flex-1 items-center gap-2 px-3">
+            <SidebarTrigger />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4"
+            />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    Project Management & Task Tracking
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header> */}
+          <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="bg-muted/50 mx-auto h-24 w-full max-w-3xl rounded-xl" />
+            <div className="bg-muted/50 mx-auto h-screen w-full max-w-3xl rounded-xl" />
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+      <div className="w-0 shrink-0">
+        <SidebarProvider variableName="--sidebar-right-width">
+          <SidebarRight />
+        </SidebarProvider>
+      </div>
+    </div>
+  )
+}
+
+
+
+  // Update CSS variable on root when sidebar state changes
+  // React.useEffect(() => {
+  //   if (variableName) {
+  //     const root = document.querySelector('[data-sidebar-root]') as HTMLElement
+  //     if (root) {
+  //       const width = !isMobile && open ? "16rem" : "0"
+  //       root.style.setProperty(variableName, width)
+  //     }
+  //   }
+  // }, [open, isMobile, variableName])
