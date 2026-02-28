@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "@repo/foundation";
 
+@source "../../../packages/ui-core/src/components/";
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
