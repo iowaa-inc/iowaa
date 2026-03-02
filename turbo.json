@@ -1,5 +1,11 @@
 {
   "$schema": "https://v2.8.11.turborepo.dev/schema.json",
+  "globalEnv": [
+    "PAYLOAD_SECRET",
+    "POSTGRES_URL",
+    "STRAPI_URL",
+    "STRAPI_API_TOKEN"
+  ],
   "ui": "tui",
   "tasks": {
     "build": {
