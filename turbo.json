@@ -6,11 +6,12 @@
     "STRAPI_URL",
     "STRAPI_API_TOKEN"
   ],
+  "globalPassThroughEnv": ["CI", "GITHUB_TOKEN", "NODE_ENV"],
   "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
