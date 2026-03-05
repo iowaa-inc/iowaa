@@ -1,0 +1,7 @@
+.next
+.agents
+.cursor
+node_modules
+build
+dist
+public

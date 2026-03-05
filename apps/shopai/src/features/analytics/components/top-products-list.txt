@@ -1,0 +1,167 @@
+"use client"
+
+import { useMemo } from "react"
+import Link from "next/link"
+import { ArrowUpDown, CalendarIcon } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
+import type { TopProduct } from "../types"
+import { TrendingUp, TrendingDown, Minus } from "lucide-react"
+
+interface TopProductsListProps {
+    /** Top products to display */
+    topProducts: TopProduct[]
+    /** Total leads for all top products */
+    totalProductLeads: number
+    /** Selected date for filtering (kept for UI consistency, but data is aggregated) */
+    productDateFilter: Date | undefined
+    /** Callback when date is changed */
+    onDateChange: (date: Date | undefined) => void
+    /** Current sort order */
+    sortOrder: "most" | "least"
+    /** Callback when sort order changes */
+    onSortChange: (order: "most" | "least") => void
+}
+
+export function TopProductsList() {
+        const { get: getTopPerformingProducts } = useTopPerformingProducts()
+
+    const topPerformingProductsData = useMemo(() => getTopPerformingProducts(), [getTopPerformingProducts])
+
+    // Calculate percentage of total for each product and format data
+    const productPercentages = useMemo(() => {
+        return topProducts.map((product) => ({
+            ...product,
+            percentage: totalProductLeads > 0 ? ((product.totalLeads / totalProductLeads) * 100).toFixed(1) : "0",
+        }))
+    }, [topProducts, totalProductLeads])
+
+    const getTrendIcon = (trend: "up" | "down" | "stable") => {
+        switch (trend) {
+            case "up":
+                return <TrendingUp className="h-3 w-3 text-green-600" />
+            case "down":
+                return <TrendingDown className="h-3 w-3 text-red-600" />
+            case "stable":
+                return <Minus className="h-3 w-3 text-gray-500" />
+        }
+    }
+
+    // Get top performing products from dataset, sorted by selected order
+    const topPerformingProducts = useMemo(() => {
+        // Sort by selected order and limit to top 5
+        const sorted = [...topPerformingProductsData].sort((a, b) => {
+            return productSortOrder === "most" ? b.totalLeads - a.totalLeads : a.totalLeads - b.totalLeads
+        })
+
+        return sorted.slice(0, 5)
+    }, [topPerformingProductsData, productSortOrder])
+
+    // Calculate total leads for top products
+    const totalProductLeads = useMemo(
+        () => topPerformingProducts.reduce((sum: number, product: TopPerformingProduct) => sum + product.totalLeads, 0),
+        [topPerformingProducts],
+    )
+
+
+    // Top products filters
+    const [productDateFilter, setProductDateFilter] = useState<Date | undefined>(new Date())
+    const [productSortOrder, setProductSortOrder] = useState<"most" | "least">("most")
+
+    return (
+        <Card className="bg-card border-border w-full">
+            <CardHeader className="px-0">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    {/* Title and description */}
+                    <div>
+                        <CardTitle className="text-lg">Top Performing Products</CardTitle>
+                        <CardDescription className="mt-1">
+                            Top products by total leads generated (all-time aggregated data)
+                        </CardDescription>
+                    </div>
+
+                    {/* Filter controls */}
+                    <div className="flex items-center gap-2">
+                        {/* Sort order selector */}
+                        <Select value={sortOrder} onValueChange={(value) => onSortChange(value as "most" | "least")}>
+                            <SelectTrigger className="w-[140px]">
+                                <ArrowUpDown className="h-4 w-4 mr-2" />
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="most">Most Leads</SelectItem>
+                                <SelectItem value="least">Least Leads</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        {/* Date picker */}
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" className="w-[140px] justify-start text-left font-normal bg-transparent">
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {productDateFilter ? format(productDateFilter, "MMM dd") : "Pick date"}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="end">
+                                <Calendar mode="single" selected={productDateFilter} onSelect={onDateChange} initialFocus />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+                </div>
+            </CardHeader>
+
+            {/* Products list */}
+            <CardContent className="px-0">
+                {productPercentages.length > 0 ? (
+                    <div className="space-y-4">
+                        {productPercentages.map((product) => (
+                            <div key={product.productId} className="flex items-center gap-4">
+                                {/* Product image */}
+                                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                                    <img
+                                        src={product.productImage || "/placeholder.svg"}
+                                        alt={product.productName}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+
+                                {/* Product name and stats */}
+                                <div className="flex-1 min-w-0">
+                                    <Link
+                                        href={`/dashboard/catalog/${product.productId}/edit`}
+                                        className="text-sm font-medium text-foreground hover:text-primary transition-colors line-clamp-1"
+                                    >
+                                        {product.productName}
+                                    </Link>
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                        <span className="text-xs text-muted-foreground">{product.totalLeads.toLocaleString()} leads</span>
+                                        <span className="text-xs text-muted-foreground">•</span>
+                                        <span className="text-xs text-muted-foreground">{product.percentage}% of total</span>
+                                        <span className="text-xs text-muted-foreground">•</span>
+                                        <span className="text-xs text-muted-foreground">{product.conversionRate}% conversion</span>
+                                        <span className="flex items-center gap-1">
+                                            {getTrendIcon(product.trend)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Lead count badge */}
+                                <div className="flex-shrink-0">
+                                    <div className="flex items-center justify-center h-8 w-16 rounded-md bg-primary/10 text-primary font-semibold text-sm">
+                                        {product.totalLeads.toLocaleString()}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-8 text-sm text-muted-foreground">No product data available for this date</div>
+                )}
+            </CardContent>
+        </Card>
+    )
+}

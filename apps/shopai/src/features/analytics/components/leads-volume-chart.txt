@@ -1,0 +1,239 @@
+/**
+ * LeadsVolumeChart Component
+ * Displays lead volume over customizable time periods (hourly, daily, monthly, yearly)
+ * Includes date range filters and trend indicator
+ *
+ * @component
+ * @param {LeadsVolumeChartProps} props - Component props
+ * @returns {JSX.Element} Lead volume chart with filters
+ */
+
+"use client"
+
+import { useState, useEffect } from "react"
+import { format } from "date-fns"
+import { useMemo } from "react"
+import { TrendingUp } from "lucide-react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { AreaChart, Area, XAxis, CartesianGrid } from "recharts"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getVolumeDescription } from "@/lib/leads"
+import { getChartConfig } from "@/lib/leads-chart"
+import type { DailyLead, HourlyLead } from "@/data/mock-data"
+
+interface LeadsVolumeChartProps {
+    /** Selected year for filtering */
+    selectedYear: string
+    /** Callback when year selection changes */
+    onYearChange: (year: string) => void
+    /** Available years for selection */
+    availableYears: string[]
+    /** Selected month for filtering */
+    selectedMonth: string
+    /** Callback when month selection changes */
+    onMonthChange: (month: string) => void
+    /** Available months for selection */
+    availableMonths: string[]
+    /** Selected day for filtering */
+    selectedDay: string
+    /** Callback when day selection changes */
+    onDayChange: (day: string) => void
+    /** Available days for selection */
+    availableDays: string[]
+    /** Complete hourly data map */
+    hourlyData: Record<string, HourlyLead[]>
+    /** Daily leads data */
+    dailyData: DailyLead[]
+    /** Monthly leads data */
+    monthlyData: DailyLead[]
+    /** Yearly leads data */
+    yearlyData: DailyLead[]
+}
+
+export function LeadsVolumeChart() {
+    // Define local state and logic for volume chart filters here instead of receiving as props
+
+
+    const { hourlyData: comprehensiveHourlyData, dailyData, monthlyData, yearlyData, productLeadsData } = useMemo(
+        () => getLeads(),
+        [getLeads],
+    )
+
+    // Get the latest date key from hourlyData for default filter values
+    const latestDateKey = useMemo(() => {
+        const keys = Object.keys(hourlyData || {})
+        if (keys.length === 0) return format(new Date(), "yyyy-MM-dd")
+        // Keys are YYYY-MM-DD so lexicographic sort matches chronological order
+        return keys.sort().at(-1) as string
+    }, [hourlyData])
+
+    // ============= Volume Chart Filters State =============
+    const [selectedYear, setSelectedYear] = useState<string>(() => latestDateKey.slice(0, 4))
+    const [selectedMonth, setSelectedMonth] = useState<string>(() => latestDateKey.slice(5, 7))
+    const [selectedDay, setSelectedDay] = useState<string>("")
+
+    // ============= Computed Options =============
+
+    const availableYears = useMemo(() => {
+        const years = new Set(yearlyData.map((y) => y.date))
+        return Array.from(years).sort()
+    }, [yearlyData])
+
+    const availableMonths = useMemo(() => {
+        const months = new Set(monthlyData.map((m) => m.date.split("-")[1]).filter(Boolean))
+        return Array.from(months).sort()
+    }, [monthlyData])
+
+    const availableDays = useMemo(() => {
+        // Only expose days in the dataset for the current month and year
+        const days = new Set(dailyData.map((d) => d.date.split("-")[2]).filter(Boolean))
+        return Array.from(days).sort()
+    }, [dailyData])
+
+    // Get chart configuration based on selected filters
+    const {
+        chartData: volumeChartData,
+        xAxisKey,
+        xAxisFormatter,
+    } = useMemo(
+        () => getChartConfig(selectedYear, selectedMonth, selectedDay, hourlyData, dailyData, monthlyData, yearlyData),
+        [selectedYear, selectedMonth, selectedDay, hourlyData, dailyData, monthlyData, yearlyData],
+    )
+
+    // Calculate total leads for current selection
+    const totalVolumeLeads = useMemo(() => {
+        return volumeChartData.reduce((acc, curr) => acc + curr.leads, 0)
+    }, [volumeChartData])
+
+    // Generate description text for current view
+    const volumeDescription = useMemo(
+        () => getVolumeDescription(selectedYear, selectedMonth, selectedDay),
+        [selectedYear, selectedMonth, selectedDay],
+    )
+
+    return (
+        <Card className="w-full">
+            <CardHeader>
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    {/* Title and total leads */}
+                    <div className="space-y-2">
+                        <h3 className="text-sm text-muted-foreground mb-1">Lead Volume Over Time</h3>
+                        <p className="font-semibold text-foreground text-4xl">{totalVolumeLeads.toLocaleString()}</p>
+                        <CardDescription>{volumeDescription}</CardDescription>
+                    </div>
+
+                    {/* Date range filters */}
+                    <div className="flex flex-wrap gap-2">
+                        {/* Year selector */}
+                        <Select
+                            value={selectedYear}
+                            onValueChange={(value) => {
+                                onYearChange(value)
+                                // Reset month and day when year changes
+                                onMonthChange("")
+                                onDayChange("")
+                            }}
+                        >
+                            <SelectTrigger className="w-[100px]">
+                                <SelectValue placeholder="Year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Years</SelectItem>
+                                {availableYears.map((year) => (
+                                    <SelectItem key={year} value={year}>
+                                        {year}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+
+                        {/* Month selector */}
+                        <Select
+                            value={selectedMonth}
+                            onValueChange={(value) => {
+                                onMonthChange(value)
+                                // Reset day when month changes
+                                onDayChange("")
+                            }}
+                            disabled={!selectedYear}
+                        >
+                            <SelectTrigger className="w-[100px]">
+                                <SelectValue placeholder="Month" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Months</SelectItem>
+                                {availableMonths.map((month) => {
+                                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+                                    return (
+                                        <SelectItem key={month} value={month}>
+                                            {monthNames[Number.parseInt(month) - 1]}
+                                        </SelectItem>
+                                    )
+                                })}
+                            </SelectContent>
+                        </Select>
+
+                        {/* Day selector */}
+                        <Select value={selectedDay} onValueChange={onDayChange} disabled={!selectedYear || !selectedMonth}>
+                            <SelectTrigger className="w-[90px]">
+                                <SelectValue placeholder="Day" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Days</SelectItem>
+                                {availableDays.map((day) => (
+                                    <SelectItem key={day} value={day}>
+                                        Day {day}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            </CardHeader>
+
+            {/* Volume chart */}
+            <CardContent>
+                <ChartContainer
+                    config={{
+                        leads: {
+                            label: "Leads",
+                            color: "var(--chart-1)",
+                        },
+                    }}
+                >
+                    <AreaChart
+                        accessibilityLayer
+                        data={volumeChartData}
+                        margin={{
+                            left: 12,
+                            right: 12,
+                        }}
+                    >
+                        <CartesianGrid vertical={false} />
+                        <XAxis dataKey={xAxisKey} tickLine={false} axisLine={false} tickMargin={8} tickFormatter={xAxisFormatter} />
+                        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" hideLabel />} />
+                        <Area
+                            dataKey="leads"
+                            type="linear"
+                            fill="var(--color-leads)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-leads)"
+                        />
+                    </AreaChart>
+                </ChartContainer>
+            </CardContent>
+
+            {/* Trending footer */}
+            <CardFooter>
+                <div className="flex w-full items-start gap-2 text-sm">
+                    <div className="grid gap-2">
+                        <div className="flex items-center gap-2 leading-none font-medium">
+                            Trending up by 5.2% this period <TrendingUp className="h-4 w-4" />
+                        </div>
+                    </div>
+                </div>
+            </CardFooter>
+        </Card>
+    )
+}

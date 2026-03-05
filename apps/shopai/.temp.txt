@@ -1,0 +1,163 @@
+    // Get today's sparkline data with responsive filtering
+    const sparklineData = useMemo(() => {
+        const todayData = comprehensiveHourlyData[latestDateKey] || []
+        const interval = getSparklineInterval(viewportWidth)
+        return filterSparklineData(todayData, interval)
+    }, [viewportWidth, comprehensiveHourlyData, latestDateKey])
+
+
+        // Viewport state for responsive sparkline
+    const [viewportWidth, setViewportWidth] = useState(0)
+    // Track viewport width for responsive design
+    useEffect(() => {
+        const updateWidth = () => setViewportWidth(window.innerWidth)
+        updateWidth()
+        window.addEventListener("resize", updateWidth)
+        return () => window.removeEventListener("resize", updateWidth)
+    }, [])
+
+
+    // Calculate display metrics based on whether user is hovering
+    const { changePercentage, changeValue, changeColor } = useMemo(() => {
+        const previousLeads = sparklineData[sparklineData.length - 1]?.leads || 0
+        const currentLeads = activeChart ? activeChart.leads : totalDailyLeadsCard
+
+        return calculateLeadChange(currentLeads, previousLeads)
+    }, [activeChart, totalDailyLeadsCard, sparklineData])
+
+    // Filter sparkline data based on viewport width for better mobile display
+    const filteredSparkline = useMemo(() => {
+        const interval = getSparklineInterval(viewportWidth)
+        return filterSparklineData(sparklineData, interval)
+    }, [viewportWidth, sparklineData])
+
+import { useMemo } from "react"
+
+
+import type { HourlyLead } from "../types"
+import { calculateLeadChange, filterSparklineData, getSparklineInterval } from "../lib/utils"
+
+
+// Generate hourly leads for today (24 hours) as { [date: string]: HourlyLead[] }
+const generateTodayHourlyLeads = (): { [date: string]: HourlyLead[] } => {
+    const now = new Date()
+    const hours: HourlyLead[] = []
+
+    // Set to today's midnight for date key
+    const dateKey = now.toISOString().slice(0, 10) // "yyyy-mm-dd"
+
+    for (let hour = 0; hour < 24; hour++) {
+        const hourDate = new Date(now)
+        hourDate.setHours(hour, 0, 0, 0)
+        // Generate realistic lead counts (higher during business hours)
+        const baseLeads = hour >= 9 && hour <= 17 ? 15 : 5
+        const randomVariation = Math.floor(Math.random() * 10)
+        const leads = Math.max(0, baseLeads + randomVariation)
+
+        const time = hourDate.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        })
+
+        hours.push({
+            hour,
+            leads,
+            time,
+        })
+    }
+
+    return {
+        [dateKey]: hours,
+    }
+}
+
+
+---
+
+
+import { SidebarTrigger } from "@/components/ui/sidebar"
+{/* <SidebarTrigger className="hidden md:flex" /> */ }
+
+
+-----
+
+
+<Stepper.Provider variant="horizontal" labelOrientation="vertical" tracking>
+      {({ methods }) => (
+        <div className="w-full min-h-screen bg-background flex flex-col">
+          <ProgressBar />
+
+          <div className="flex-1 overflow-auto">
+            {/* Stepper Navigation */}
+            <div className="w-full max-w-2xl mx-auto px-4 py-8">
+              <Stepper.Navigation>
+                <Stepper.Step of="name">
+                  <Stepper.Title>Let's start with a name</Stepper.Title>
+                  <Stepper.Description>Choose a unique name for your business. We'll check availability in real-time.</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="category">
+                  <Stepper.Title>Tell us about your business</Stepper.Title>
+                  <Stepper.Description>Select your business category and write a brief description.</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="logo">
+                  <Stepper.Title>Upload your logo</Stepper.Title>
+                  <Stepper.Description>Choose a logo that represents your brand. PNG, JPG, or WebP. Max 5MB.</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="contact">
+                  <Stepper.Title>Contact information</Stepper.Title>
+                  <Stepper.Description>We'll use this to reach you about your account and important updates.</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="document">
+                  <Stepper.Title>Business identity document</Stepper.Title>
+                  <Stepper.Description>Upload your business registration or identity document for verification.</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="hours">
+                  <Stepper.Title>Operating hours</Stepper.Title>
+                  <Stepper.Description>Set your business hours for each day of the week in your timezone</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="phone">
+                  <Stepper.Title>Verify your phone number</Stepper.Title>
+                  <Stepper.Description>We'll send you a WhatsApp OTP</Stepper.Description>
+                </Stepper.Step>
+                <Stepper.Step of="review">
+                  <Stepper.Title>Review your information</Stepper.Title>
+                  <Stepper.Description>
+                    Please review all the information below. You can edit any section by clicking the edit button.
+                  </Stepper.Description>
+                </Stepper.Step>
+              </Stepper.Navigation>
+            </div>
+
+            <div className="space-y-2 w-full max-w-2xl mx-auto px-4 py-8">
+              <div className="w-fit px-3 py-2 rounded-full bg-muted mb-6">
+                <span className="text-sm text-muted-foreground">
+                  Step 1 of 8
+                </span>
+              </div>
+              <Stepper.Panel asChild>
+                <div>
+                  {/* For brevity, rendering only the BusinessName panel for "name".
+                  Repeat conditionally for other steps as you build out the other forms. */}
+                  <BusinessName />
+                </div>
+              </Stepper.Panel>
+            </div>
+          </div>
+        </div>
+      )}
+    </Stepper.Provider>
+
+
+
+
+
+
+    create useAvailabilityCheck @route.ts (40-41) using @SWR 
+
+PURPOSE: This method managing database table property checks (supabase), can check for property on any database,  manages query lifecycle
+
+- Polymorphic and multiscope (business, user, etc...)
+- export a method for specific proper check
+- uses global configuration
+- aligns with recommended SWR custom hook convention and best practice
