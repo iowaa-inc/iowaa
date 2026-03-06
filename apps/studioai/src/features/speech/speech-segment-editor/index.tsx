@@ -75,9 +75,24 @@ export function SpeechSegmentEditor({
 
     // --- Event Handlers ---
 
+    // Track the last value to prevent identical saves (e.g., from Slate normalizations)
+    const contentRef = React.useRef(value);
+
     // The controlled value comes from props, so call parent's onChange.
     const handleChange = (newValue: Descendant[]) => {
-        onChange(newValue);
+        const isAstChange = editor.operations.some(
+            (op) => "set_selection" !== op.type
+        );
+        if (isAstChange) {
+            // Prevent false-positive updates due to initial normalization
+            const currentStringified = JSON.stringify(newValue);
+            const prevStringified = JSON.stringify(contentRef.current);
+            if (currentStringified !== prevStringified) {
+                contentRef.current = newValue;
+                onChange(newValue);
+            }
+        }
+        
         const { selection } = editor;
 
         if (selection && Range.isCollapsed(selection)) {

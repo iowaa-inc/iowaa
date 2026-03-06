@@ -7,7 +7,7 @@ import { MODULE_REGISTRY } from "./registry";
 import { SelectedItemsDisplay } from "./selected-items-display";
 import { useSpeech } from "./context";
 import { SelectedExpression, ExpressionModule } from "./types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface SpeechExpressionSelectorProps {
   onChange?: (updated: SelectedExpression[]) => void;
@@ -28,9 +28,15 @@ export function SpeechExpressionSelector({
     getItemsForModule,
   } = speechApi;
 
+  const prevItemsRef = useRef(JSON.stringify(selectedItems));
+
   useEffect(() => {
-    if (onChange) {
-      onChange([...selectedItems]);
+    const currentStringified = JSON.stringify(selectedItems);
+    if (prevItemsRef.current !== currentStringified) {
+      prevItemsRef.current = currentStringified;
+      if (onChange) {
+        onChange([...selectedItems]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItems]);

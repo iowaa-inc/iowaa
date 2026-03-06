@@ -72,6 +72,7 @@ export default function WorkspacePage() {
 
   // Handler for when a segment is updated
   const handleSegmentChange = (segmentId: string, updates: Partial<SpeechSegment>) => {
+    console.log(`handleSegmentChange called for ${segmentId}:`, updates);
     if (!scriptId) return;
 
     // Queue update
@@ -155,7 +156,7 @@ export default function WorkspacePage() {
 
       <div className="mx-auto w-full max-w-3xl px-4 md:px-6 py-6 md:py-10 pb-32">
         <section className="mb-8 md:mb-12">
-          <h1 className="text-2xl md:text-3xl font-semibold wrap-break-word">
+          <h1 className="text-2xl md:text-3xl font-semibold wrap-break-word capitalize">
             {script ? script.name : 'Loading...'}
           </h1>
           <p className="text-sm text-muted-foreground mt-2">

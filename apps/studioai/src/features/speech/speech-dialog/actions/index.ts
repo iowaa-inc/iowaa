@@ -93,6 +93,8 @@ export async function updateSpeechSegment(
   if (input.timestamp !== undefined) updates.timestamp = input.timestamp;
   if (input.order !== undefined) updates.order = input.order;
 
+  console.log(`[ACTIONS] updateSpeechSegment hit for id: ${input.id}`, JSON.stringify(updates));
+
   const { data: segment, error } = await supabase
     .from('speech_segments')
     .update(updates)

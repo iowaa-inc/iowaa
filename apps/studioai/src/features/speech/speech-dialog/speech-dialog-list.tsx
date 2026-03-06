@@ -197,7 +197,7 @@ export const SpeechDialogList: React.FC<SpeechDialogListProps> = ({
       )}
 
       {/* Segments list */}
-      <div className="space-y-12">
+      <div className="">
         {sortedSegments.map((segment) => (
           <SpeechSegmentItem
             key={segment.id}
