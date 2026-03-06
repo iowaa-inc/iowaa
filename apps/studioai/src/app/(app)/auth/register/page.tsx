@@ -25,7 +25,7 @@ export default function RegisterPage() {
     <div className="bg-background text-foreground flex min-h-screen items-center justify-center px-4">
       <div className="flex w-full max-w-md flex-col items-center justify-center">
         <div className="mb-8 space-y-1">
-          <h1 className="text-center text-2xl font-medium">Welcome to Voiceflow</h1>
+          <h1 className="text-center text-2xl font-medium">Welcome to StudioAI</h1>
           <p className="text-muted-foreground text-center">Create your free account now</p>
         </div>
 

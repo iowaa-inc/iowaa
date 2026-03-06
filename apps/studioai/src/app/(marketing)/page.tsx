@@ -19,15 +19,15 @@ const PAGE_WORDS = [
   { text: "مرحبا", lang: "ar", font: "'Noto Sans Arabic', sans-serif" },
 ];
 
-export default function Page() {
+export default function Home() {
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-background">
+    <main className="relative flex-1 w-full overflow-hidden bg-background flex flex-col">
       <Preloader words={PAGE_WORDS} wrapperClassName="flex items-center justify-center w-full h-full">
         <div className="flex flex-col flex-1 items-center justify-center h-full space-y-4 text-center px-4 py-24 mx-auto w-full">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">
+          <h1 className="text-4xl font-extrabold tracking-tighter">
             Work in Progress
           </h1>
-          <p className="text-lg text-muted-foreground max-w-[600px]">
+          <p className="text-lg text-muted-foreground max-w-[400px]">
             We are currently building something amazing. Please check back
             later.
           </p>

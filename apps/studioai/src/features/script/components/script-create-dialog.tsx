@@ -1,6 +1,13 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
+import { mutate } from 'swr';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+
+import { createScript } from '@/features/script/actions/create';
+import { useActiveProject } from '@/features/project/hooks/use-active-project';
+import { useUserId } from '@/features/auth/hooks/use-user-id';
 
 import { Button } from '@repo/ui-core/components/button';
 import {
@@ -24,13 +31,44 @@ interface ScriptCreateDialogProps {
 export function ScriptCreateDialog({ children }: ScriptCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleCreate(e: React.FormEvent) {
+  const { activeProjectId } = useActiveProject();
+  const uid = useUserId();
+  const router = useRouter();
+
+  async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
-    // Do something with name (submit to API, etc)
-    // For now just close dialog and reset, since onCreate prop is not passed
+
+    if (!name.trim() || !activeProjectId) return;
+
+    setIsSubmitting(true);
+    const result = await createScript({
+      name: name,
+      projectId: activeProjectId,
+    });
+    
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      toast.error(result.error || 'Failed to create script');
+      return;
+    }
+
+    toast.success('Script created');
+    
+    if (uid.data) {
+      mutate(
+        (key) => Array.isArray(key) && key[0] === 'scripts' && key[1] === uid.data && key[2] === activeProjectId,
+        undefined,
+        { revalidate: true }
+      );
+    }
+    
     setOpen(false);
     setName('');
+
+    router.push(`/workspace/${activeProjectId}/${result.script.id}`);
   }
 
   function handleCancel() {
@@ -40,9 +78,9 @@ export function ScriptCreateDialog({ children }: ScriptCreateDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <form onSubmit={handleCreate}>
-        {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-        <DialogContent className="sm:max-w-sm">
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
+      <DialogContent className="sm:max-w-sm">
+        <form onSubmit={handleCreate}>
           <DialogHeader>
             <DialogTitle>Create new script</DialogTitle>
             <DialogDescription>
@@ -68,12 +106,12 @@ export function ScriptCreateDialog({ children }: ScriptCreateDialogProps) {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={!name.trim()}>
-              Create
+            <Button type="submit" disabled={!name.trim() || isSubmitting || !activeProjectId}>
+              {isSubmitting ? 'Creating...' : 'Create'}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
