@@ -138,7 +138,7 @@ const SpeechSegmentText: React.FC<SpeechSegmentTextProps> = ({
     }, [setTextHeight]);
 
     return (
-        <div className={cn("pb-10")}>
+        <div ref={ref} className={cn("pb-10")}>
             <SpeechSegmentEditor
                 value={onChange ? segment : internalValue}
                 onChange={onChange ? onChange : handleEditorChange}
@@ -152,11 +152,13 @@ const SpeechSegmentText: React.FC<SpeechSegmentTextProps> = ({
 const SpeechSegmentIndent: React.FC<SpeechSegmentIndentProps> = ({ className }) => {
     const { textHeight } = useSpeechSegmentContext()
     return (
-        <div
-            className={cn("flex-1 px-6", className)}
-            style={textHeight ? { height: textHeight } : undefined}
-        >
-            <Separator orientation="vertical" className={cn("min-h-full bg-primary w-[2px]!")} />
+        <div className={cn("relative flex items-start shrink-0", className)} style={{ width: '48px' }}>
+            <div className="w-full flex justify-center">
+                <div
+                    className="w-[2px] bg-primary transition-all duration-150"
+                    style={{ height: textHeight ? `${textHeight}px` : '100%' }}
+                />
+            </div>
         </div>
     )
 };

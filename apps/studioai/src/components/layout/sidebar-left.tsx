@@ -27,17 +27,10 @@ export function SidebarLeft({ ...props }: React.ComponentProps<typeof Sidebar>) 
           <div className="w-full">
             <ProjectSelector />
           </div>
-          {/* <div className="left-[16px] relative">
-            <SidebarTrigger />
-          </div> */}
-        </div>
-        {/* <div className="flex items-center justify-between w-full relative">
-          <UserMenu />
-          <ProjectSelector />
-          <div className="left-[16px] relative">
+          <div className="relative">
             <SidebarTrigger />
           </div>
-        </div> */}
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain />

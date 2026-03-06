@@ -41,6 +41,7 @@
     "motion": "catalog:",
     "next-themes": "catalog:",
     "radix-ui": "catalog:",
+    "react-resizable-panels": "^4.7.1",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:",

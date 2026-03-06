@@ -83,16 +83,17 @@ export default function WorkspacePage() {
     <>
       <ScriptWorkspaceHeader />
 
-      <div className="mx-auto max-w-xl space-y-16 py-10">
-        <section className="mb-8">
-          <h1 className="text-start text-3xl font-semibold">
+      <div className="mx-auto w-full max-w-3xl px-4 md:px-6 py-6 md:py-10 pb-32">
+        <section className="mb-8 md:mb-12">
+          <h1 className="text-2xl md:text-3xl font-semibold wrap-break-word">
             {script ? script.name : 'Loading...'}
           </h1>
         </section>
-        <div className="">
+
+        <div className="space-y-12">
           <SpeechSegment.Root>
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
                 <SpeechSegment.Timestamp seconds={88} />
                 <SpeechProvider initialItems={MOCK_SELECTED_EXPRESSIONS}>
                   <SpeechExpressionSelector
@@ -103,15 +104,20 @@ export default function WorkspacePage() {
                   />
                 </SpeechProvider>
               </div>
-              <SpeechSegment.PlayButton
-                onClick={() => {
-                  /* play functionality */
-                }}
-              />
+              <div className="shrink-0">
+                <SpeechSegment.PlayButton
+                  onClick={() => {
+                    /* play functionality */
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex">
+
+            <div className="flex items-start w-full">
               <SpeechSegment.Indent />
-              <SpeechSegment.Text segment={segment} onChange={setSegment} readOnly={false} />
+              <div className="min-w-0 flex-1">
+                <SpeechSegment.Text segment={segment} onChange={setSegment} readOnly={false} />
+              </div>
             </div>
           </SpeechSegment.Root>
         </div>
