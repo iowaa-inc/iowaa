@@ -142,46 +142,65 @@ function useHighlight<
 
         if (!selection) {
             setInfo(null);
+            prevSelRef.current = null;
             return;
         }
 
         if (
             prevSelRef.current &&
-            Range.equals(prevSelRef.current, selection) &&
-            info
+            Range.equals(prevSelRef.current, selection)
         ) {
             return;
         }
-        prevSelRef.current = selection;
 
-        const meta = getHighlightMeta(
-            editor,
-            selection,
-            type
-        );
+        setInfo(null);
 
-        if (!meta) {
-            setInfo(null);
-            return;
-        }
+        const timerId = setTimeout(() => {
+            const currentSelection = editor.selection;
+            
+            if (!currentSelection || !Range.equals(currentSelection, selection)) {
+                return;
+            }
 
-        const { rect, text, nodeId } = meta;
+            const meta = getHighlightMeta(
+                editor,
+                selection,
+                type
+            );
 
-        const pos = {
-            x: rect.left + window.scrollX + rect.width / 2,
-            y: rect.bottom + window.scrollY + 8,
-        };
+            if (!meta) {
+                setInfo(null);
+                prevSelRef.current = null;
+                return;
+            }
 
-        const fullInfo = getInfoRef.current
-            ? getInfoRef.current({ editor, selection, rect, text, nodeId })
-            : ({
-                text: text || "Selected Text",
-                pos,
-                range: selection,
-                nodeId,
-            } as unknown as T);
+            const { rect, text, nodeId } = meta;
 
-        setInfo(fullInfo);
+            if (!text || text.trim() === "") {
+                setInfo(null);
+                prevSelRef.current = null;
+                return;
+            }
+
+            const pos = {
+                x: rect.left + window.scrollX + rect.width / 2,
+                y: rect.bottom + window.scrollY + 8,
+            };
+
+            const fullInfo = getInfoRef.current
+                ? getInfoRef.current({ editor, selection, rect, text, nodeId })
+                : ({
+                    text: text || "Selected Text",
+                    pos,
+                    range: selection,
+                    nodeId,
+                } as unknown as T);
+
+            prevSelRef.current = selection;
+            setInfo(fullInfo);
+        }, 150);
+
+        return () => clearTimeout(timerId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor, editor.selection, type]);
 

@@ -112,7 +112,7 @@ export function SpeechSegmentEditor({
                     at: triggerRange, // Use the precise range
                 });
 
-                setSearch(match[1]);
+                setSearch(match[1] || "");
                 setIndex(0);
                 return;
             }
