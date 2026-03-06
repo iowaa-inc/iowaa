@@ -1,7 +1,7 @@
-import { MarketsHubHero, InteractiveRegionsGrid, CrossBorderScalabilityStatement } from '@/features/markets';
-import { GlobalCtaSection } from '@/features/shared';
-
-
+import { GlobalCtaSection } from "@/components/section/global-cta-section";
+import { CrossBorderScalabilityStatement } from "./_components/cross-border-scalability-statement";
+import { InteractiveRegionsGrid } from "./_components/interactive-regions-grid";
+import { MarketsHubHero } from "./_components/markets-hub-hero";
 
 export default function Page() {
   return (

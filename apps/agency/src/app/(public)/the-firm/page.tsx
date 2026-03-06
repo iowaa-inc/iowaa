@@ -1,7 +1,9 @@
-import { FirmIdentityHero, MissionAndVision, TheCulturalMoat, LeadershipAndArchitects, CareersAndCulture } from '@/features/firm';
-import { GlobalCtaSection } from '@/features/shared';
-
-
+// import { GlobalCtaSection } from '';
+import { CareersAndCulture } from "./_components/careers-and-culture";
+import { FirmIdentityHero } from "./_components/firm-identity-hero";
+import { LeadershipAndArchitects } from "./_components/leadership-and-architects";
+import { MissionAndVision } from "./_components/mission-and-vision";
+import { TheCulturalMoat } from "./_components/the-cultural-moat";
 
 export default function Page() {
   return (
@@ -11,7 +13,7 @@ export default function Page() {
       <TheCulturalMoat />
       <LeadershipAndArchitects />
       <CareersAndCulture />
-      <GlobalCtaSection />
+      {/* <GlobalCtaSection /> */}
     </main>
   );
 }

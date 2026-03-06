@@ -1,6 +1,8 @@
-import { InsightsHubHero, FeaturedInsight, CategoryFilters, InsightsGrid, NewsletterCapture } from '@/features/insights';
-
-
+import { CategoryFilters } from "./_components/category-filters";
+import { FeaturedInsight } from "./_components/featured-insight";
+import { InsightsGrid } from "./_components/insights-grid";
+import { InsightsHubHero } from "./_components/insights-hub-hero";
+import { NewsletterCapture } from "./_components/newsletter-capture";
 
 export default function Page() {
   return (

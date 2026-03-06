@@ -1,6 +1,7 @@
-import { BookingHero, WhatToExpectTimeline, StrategyIntakeForm, TrustBadgesAndReassurance } from '@/features/strategy-session';
-
-
+import { BookingHero } from "./_components/booking-hero";
+import { StrategyIntakeForm } from "./_components/strategy-intake-form";
+import { TrustBadgesAndReassurance } from "./_components/trust-badges-and-reassurance";
+import { WhatToExpectTimeline } from "./_components/what-to-expect-timeline";
 
 export default function Page() {
   return (
