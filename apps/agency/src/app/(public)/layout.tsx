@@ -10,12 +10,11 @@ import { ThemeProvider } from "@repo/ui-core/components/theme-provider";
 import { Toaster } from "@repo/ui-core/components/sonner";
 import { TooltipProvider } from "@repo/ui-core/components/tooltip";
 
-import "./globals.css";
+import "@/app/globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 const geist = Geist({
-  subsets: ["latin"],
   variable: "--font-geist",
 });
 

@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 
 catalog:
+  "babel-plugin-react-compiler": 1.0.0
   "@base-ui/react": "^1.2.0"
   "@eslint/js": "^9.39.1"
   "@hookform/resolvers": "^5.2.2"
