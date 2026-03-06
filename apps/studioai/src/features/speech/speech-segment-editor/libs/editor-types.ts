@@ -11,7 +11,11 @@ export type HighlightEnrichmentElement = {
 // --- Node Types ---
 export type EnrichmentElement = {
     type: "enrichment";
-    enrichment: { id: string; label: string };
+    enrichment: {
+        id: string;
+        label: string;
+        intensity?: number; // Optional intensity/degree value for utterances
+    };
     children: CustomText[];
 };
 
