@@ -257,14 +257,14 @@ function PreloaderOverlay({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 overflow-hidden"
+      className="fixed inset-0 z-50 h-[100dvh] w-screen overflow-hidden"
       style={{ backgroundColor }}
       // AnimatePresence exit
       exit={{ opacity: 0, transition: { duration: 0.2, delay: 0.55 } }}
     >
       {/* ── Phase 1: word cycling ─────────────────────────────────── */}
       {currentWord && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
+        <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center select-none">
           <WordReveal
             word={currentWord}
             isFirst={wordIndex === 0}

@@ -1,12 +1,5 @@
 "use client";
 
-import { GlobalCtaSection } from "@/components/section/global-cta-section";
-import { HeroSection } from "./_components/hero-section";
-import { TheProblemStatement } from "./_components/the-problem-statement";
-import { CoreValueProposition } from "./_components/core-value-proposition";
-import { MethodologyTeaser } from "./_components/methodology-teaser";
-import { FeaturedMarketsCarousel } from "./_components/featured-markets-carousel";
-import { ImpactAndMetrics } from "./_components/impact-and-metrics";
 import { Preloader } from "@repo/ui-core/components/preloader";
 
 const PAGE_WORDS = [
@@ -28,16 +21,20 @@ const PAGE_WORDS = [
 
 export default function Page() {
   return (
-    <main className="relative min-h-screen bg-background w-full">
-      <Preloader words={PAGE_WORDS}>
-        {/* ── Main content ── revealed beneath the preloader ── */}
-        <HeroSection />
-        <TheProblemStatement />
-        <CoreValueProposition />
-        <MethodologyTeaser />
-        <FeaturedMarketsCarousel />
-        <ImpactAndMetrics />
-        <GlobalCtaSection />
+    <main className="relative h-screen w-screen overflow-hidden bg-background">
+      <Preloader
+        words={PAGE_WORDS}
+        wrapperClassName="flex items-center justify-center w-full h-full"
+      >
+        <div className="flex flex-col flex-1 items-center justify-center h-full space-y-4 text-center px-4 py-24 mx-auto w-full">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">
+            Work in Progress
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-[600px]">
+            We are currently building something amazing. Please check back
+            later.
+          </p>
+        </div>
       </Preloader>
     </main>
   );
