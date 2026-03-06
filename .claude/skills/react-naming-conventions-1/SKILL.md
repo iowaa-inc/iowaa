@@ -17,33 +17,38 @@ Always apply these rules. Proactively flag and correct violations without waitin
 ## Convention 1: kebab-case for Files & Folders
 
 ### Rule
+
 Every file and folder in the project **must** use `kebab-case`:
+
 - All lowercase letters
 - Words separated by hyphens (`-`)
 - No spaces, underscores, PascalCase, or camelCase in file/folder names
 
 ### Applies To
-| Type | Correct ✅ | Incorrect ❌ |
-|---|---|---|
-| React components | `user-profile.tsx` | `UserProfile.tsx`, `userProfile.tsx` |
-| Pages (Next.js) | `about-us.tsx` | `AboutUs.tsx`, `about_us.tsx` |
-| Hooks | `use-auth.ts` | `useAuth.ts`, `UseAuth.ts` |
-| Utilities | `format-date.ts` | `formatDate.ts`, `FormatDate.ts` |
-| Context files | `auth-context.tsx` | `AuthContext.tsx` |
-| API routes | `get-user.ts` | `getUser.ts` |
-| Stylesheets | `button-styles.css` | `ButtonStyles.css`, `buttonStyles.css` |
-| Test files | `user-card.test.tsx` | `UserCard.test.tsx` |
-| Config files | `next-config.js` | `nextConfig.js` *(follow framework default for `next.config.js`)* |
-| Folders/dirs | `components/user-settings/` | `components/UserSettings/` |
-| Index files | `index.ts` | *(no change needed)* |
+
+| Type             | Correct ✅                  | Incorrect ❌                                                      |
+| ---------------- | --------------------------- | ----------------------------------------------------------------- |
+| React components | `user-profile.tsx`          | `UserProfile.tsx`, `userProfile.tsx`                              |
+| Pages (Next.js)  | `about-us.tsx`              | `AboutUs.tsx`, `about_us.tsx`                                     |
+| Hooks            | `use-auth.ts`               | `useAuth.ts`, `UseAuth.ts`                                        |
+| Utilities        | `format-date.ts`            | `formatDate.ts`, `FormatDate.ts`                                  |
+| Context files    | `auth-context.tsx`          | `AuthContext.tsx`                                                 |
+| API routes       | `get-user.ts`               | `getUser.ts`                                                      |
+| Stylesheets      | `button-styles.css`         | `ButtonStyles.css`, `buttonStyles.css`                            |
+| Test files       | `user-card.test.tsx`        | `UserCard.test.tsx`                                               |
+| Config files     | `next-config.js`            | `nextConfig.js` _(follow framework default for `next.config.js`)_ |
+| Folders/dirs     | `components/user-settings/` | `components/UserSettings/`                                        |
+| Index files      | `index.ts`                  | _(no change needed)_                                              |
 
 ### Special Cases
+
 - **`next.config.js`**, **`tailwind.config.js`**, **`jest.config.js`** — framework-mandated filenames are exempt. Don't rename them.
 - **`README.md`**, **`LICENSE`** — uppercase convention is standard; leave them.
 - **`_app.tsx`**, **`_document.tsx`** — Next.js Pages Router special files with underscores are exempt.
 - **Dynamic route segments** in Next.js App Router like `[slug]` or `(auth)` — keep brackets/parens but use kebab-case inside: `[user-id]`, `(auth-group)`.
 
 ### Component Name vs. File Name
+
 The **file** uses kebab-case, but the **exported React component** inside uses PascalCase. This is intentional and correct:
 
 ```tsx
@@ -59,14 +64,16 @@ export default function UserProfileCard() { ... }
 ```
 
 ### Import Paths
+
 When importing, use the kebab-case path:
+
 ```tsx
 // ✅ Correct
-import UserProfileCard from '@/components/user-profile-card';
-import { formatDate } from '@/utils/format-date';
+import UserProfileCard from "@/components/user-profile-card";
+import { formatDate } from "@/utils/format-date";
 
 // ❌ Incorrect
-import UserProfileCard from '@/components/UserProfileCard';
+import UserProfileCard from "@/components/UserProfileCard";
 ```
 
 ---
@@ -74,7 +81,9 @@ import UserProfileCard from '@/components/UserProfileCard';
 ## Convention 2: SCREAMING_SNAKE_CASE for Env Vars & Constants
 
 ### Rule
+
 All environment variables and module-level constants **must** use `SCREAMING_SNAKE_CASE`:
+
 - All uppercase letters
 - Words separated by underscores (`_`)
 - No camelCase, PascalCase, or kebab-case
@@ -104,22 +113,22 @@ NextPublicApiUrl=https://api.example.com
 // ✅ File: constants/api-config.ts — Correct
 export const MAX_RETRIES = 3;
 export const API_TIMEOUT_MS = 5000;
-export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
+export const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 export const DEFAULT_PAGE_SIZE = 20;
-export const SUPPORTED_LOCALES = ['en', 'fr', 'de'] as const;
+export const SUPPORTED_LOCALES = ["en", "fr", "de"] as const;
 
 // ❌ Incorrect
 export const maxRetries = 3;
 export const apiTimeoutMs = 5000;
-export const baseApiUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+export const baseApiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 ```
 
 ```ts
 // ✅ Feature flags, status codes, roles
 export const USER_ROLES = {
-  ADMIN: 'admin',
-  EDITOR: 'editor',
-  VIEWER: 'viewer',
+  ADMIN: "admin",
+  EDITOR: "editor",
+  VIEWER: "viewer",
 } as const;
 
 export const HTTP_STATUS = {
@@ -129,11 +138,12 @@ export const HTTP_STATUS = {
 } as const;
 
 // ❌ Incorrect
-export const userRoles = { admin: 'admin' };
+export const userRoles = { admin: "admin" };
 export const HttpStatus = { ok: 200 };
 ```
 
 ### Where Constants Live
+
 Place shared constants in a dedicated file using kebab-case naming (applying Convention 1):
 
 ```
@@ -147,13 +157,16 @@ src/
 ```
 
 ### What Counts as a "Constant"
+
 Apply SCREAMING_SNAKE_CASE to:
+
 - Module-level `const` values that are fixed/static (not derived at runtime per call)
 - Named regex patterns used as constants: `const EMAIL_REGEX = /^.../`
 - String literals used as identifiers or keys: `const COOKIE_NAME = 'session'`
 - Numeric thresholds/limits: `const MAX_FILE_SIZE_MB = 10`
 
 Do **not** apply SCREAMING_SNAKE_CASE to:
+
 - Regular variables inside functions (use camelCase)
 - React component props or state (use camelCase)
 - Object keys in general (unless they represent status/enum values)
@@ -166,6 +179,7 @@ Do **not** apply SCREAMING_SNAKE_CASE to:
 When writing or reviewing any React/Next.js code, run through this checklist:
 
 ### Files & Folders
+
 - [ ] All new files use kebab-case
 - [ ] All new folders use kebab-case
 - [ ] Component file names are kebab-case even though the component export is PascalCase
@@ -173,6 +187,7 @@ When writing or reviewing any React/Next.js code, run through this checklist:
 - [ ] Framework-mandated filenames (next.config.js, etc.) are left unchanged
 
 ### Env Vars & Constants
+
 - [ ] All `.env*` variable names are SCREAMING_SNAKE_CASE
 - [ ] All module-level constants in `.ts`/`.tsx` files are SCREAMING_SNAKE_CASE
 - [ ] Constants are grouped into dedicated `constants/` files with kebab-case names
@@ -182,16 +197,16 @@ When writing or reviewing any React/Next.js code, run through this checklist:
 
 ## Common Violations & Fixes
 
-| Violation | Fix |
-|---|---|
-| `components/UserCard.tsx` | → `components/user-card.tsx` |
-| `hooks/useAuth.ts` | → `hooks/use-auth.ts` |
-| `utils/formatDate.ts` | → `utils/format-date.ts` |
-| `const apiBaseUrl = '...'` | → `const API_BASE_URL = '...'` |
-| `NEXT_PUBLIC_apiKey=...` | → `NEXT_PUBLIC_API_KEY=...` |
+| Violation                     | Fix                              |
+| ----------------------------- | -------------------------------- |
+| `components/UserCard.tsx`     | → `components/user-card.tsx`     |
+| `hooks/useAuth.ts`            | → `hooks/use-auth.ts`            |
+| `utils/formatDate.ts`         | → `utils/format-date.ts`         |
+| `const apiBaseUrl = '...'`    | → `const API_BASE_URL = '...'`   |
+| `NEXT_PUBLIC_apiKey=...`      | → `NEXT_PUBLIC_API_KEY=...`      |
 | `export const maxRetries = 3` | → `export const MAX_RETRIES = 3` |
-| `pages/AboutUs.tsx` | → `pages/about-us.tsx` |
-| `store/authSlice.ts` | → `store/auth-slice.ts` |
+| `pages/AboutUs.tsx`           | → `pages/about-us.tsx`           |
+| `store/authSlice.ts`          | → `store/auth-slice.ts`          |
 
 ---
 
@@ -243,12 +258,12 @@ src/
 
 ## Quick Reference
 
-| Context | Convention | Example |
-|---|---|---|
-| File names | kebab-case | `user-profile-card.tsx` |
-| Folder names | kebab-case | `user-settings/` |
-| React component (export) | PascalCase | `UserProfileCard` |
-| Function/variable (local) | camelCase | `const userName = ...` |
-| Module-level constant | SCREAMING_SNAKE_CASE | `const MAX_RETRIES = 3` |
-| Environment variable | SCREAMING_SNAKE_CASE | `NEXT_PUBLIC_API_URL` |
-| TypeScript type/interface | PascalCase | `type UserProfile = ...` |
+| Context                   | Convention           | Example                  |
+| ------------------------- | -------------------- | ------------------------ |
+| File names                | kebab-case           | `user-profile-card.tsx`  |
+| Folder names              | kebab-case           | `user-settings/`         |
+| React component (export)  | PascalCase           | `UserProfileCard`        |
+| Function/variable (local) | camelCase            | `const userName = ...`   |
+| Module-level constant     | SCREAMING_SNAKE_CASE | `const MAX_RETRIES = 3`  |
+| Environment variable      | SCREAMING_SNAKE_CASE | `NEXT_PUBLIC_API_URL`    |
+| TypeScript type/interface | PascalCase           | `type UserProfile = ...` |

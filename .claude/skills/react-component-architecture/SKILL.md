@@ -17,11 +17,11 @@ Every component you write or review must be classified along **three axes**. App
 
 ## Axis 1: Construct (How it's built)
 
-| Type | Description | Marker |
-|---|---|---|
-| **Functional Component** | JS/TS function returning JSX, uses Hooks | Default in all React apps |
-| **Server Component (RSC)** | Renders on server only. Can access DB/filesystem. No hooks, no browser events. | Default in Next.js 13+ App Router |
-| **Client Component** | Renders in browser. Can use hooks, event listeners. | Must have `'use client'` at top of file |
+| Type                       | Description                                                                    | Marker                                  |
+| -------------------------- | ------------------------------------------------------------------------------ | --------------------------------------- |
+| **Functional Component**   | JS/TS function returning JSX, uses Hooks                                       | Default in all React apps               |
+| **Server Component (RSC)** | Renders on server only. Can access DB/filesystem. No hooks, no browser events. | Default in Next.js 13+ App Router       |
+| **Client Component**       | Renders in browser. Can use hooks, event listeners.                            | Must have `'use client'` at top of file |
 
 **Rule:** In Next.js App Router, assume Server Component unless the component needs interactivity, hooks, or browser APIs — then add `'use client'`.
 
@@ -39,7 +39,7 @@ Every component you write or review must be classified along **three axes**. App
 ## Axis 3: Identity (What it represents)
 
 - **Identity / Entity Component** — Owns the state of a domain object. If it unmounts, that state is gone (unless persisted globally). Example: `RegistrationForm` owns the user's in-progress sign-up.
-- **Strategy / Behavioral Component** — Stateless "lens". Pure function: same input always gives same output. Doesn't care *what* data it shows, only *how*. Examples: `PriceFormatter`, `DataGrid`.
+- **Strategy / Behavioral Component** — Stateless "lens". Pure function: same input always gives same output. Doesn't care _what_ data it shows, only _how_. Examples: `PriceFormatter`, `DataGrid`.
 
 ---
 
@@ -68,43 +68,53 @@ app/
 ## Common Patterns
 
 ### Data Fetching Page (Next.js)
+
 ```tsx
 // app/users/page.tsx — Server Component + Container
-import UserList from './UserList'
+import UserList from "./UserList";
 
 export default async function UsersPage() {
-  const users = await fetch('/api/users').then(r => r.json())
-  return <UserList users={users} />
+  const users = await fetch("/api/users").then((r) => r.json());
+  return <UserList users={users} />;
 }
 ```
 
 ### Interactive UI Component (Next.js)
+
 ```tsx
 // components/UserList.tsx — Client Component + Presentational
-'use client'
+"use client";
 
 export default function UserList({ users }) {
-  return users.map(u => <div key={u.id}>{u.name}</div>)
+  return users.map((u) => <div key={u.id}>{u.name}</div>);
 }
 ```
 
 ### Identity Component (owns form state)
+
 ```tsx
 // components/RegistrationForm.tsx — Client Component + Identity
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
 
 export default function RegistrationForm() {
-  const [email, setEmail] = useState('') // owns the entity state
+  const [email, setEmail] = useState(""); // owns the entity state
   // ...
 }
 ```
 
 ### Strategy Component (pure display)
+
 ```tsx
 // components/PriceFormatter.tsx — Presentational + Strategy
 export default function PriceFormatter({ amount, currency }) {
-  return <span>{new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount)}</span>
+  return (
+    <span>
+      {new Intl.NumberFormat("en-US", { style: "currency", currency }).format(
+        amount,
+      )}
+    </span>
+  );
 }
 ```
 

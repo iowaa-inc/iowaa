@@ -14,6 +14,7 @@ description: >
 # React Feature-Based Architecture
 
 ## Core Principle
+
 Organize files by **what they do** (feature/domain), not **what they are** (file type).
 
 ---
@@ -63,6 +64,7 @@ src/
 ## Feature vs. Shared Component — Decision Rules
 
 ### Put it in `features/` if ANY of these are true:
+
 1. **Delete Test**: Deleting it leaves the rest of the app functional (it's optional business logic)
 2. **Noun Test**: Named after a business concept (`Cart`, `Profile`, `Search`) not a technical term (`Forms`, `Hooks`)
 3. **Complexity Test**: Needs its own API call + UI component + hook (multiple moving parts)
@@ -70,21 +72,23 @@ src/
 5. **Team Test**: You could tell a freelancer "work exclusively on the X" with clear scope
 
 ### Put it in `components/ui` if:
+
 - It's generic and reusable across any feature (Button, Modal, Card, Badge)
 - It only handles appearance — no business logic, no data fetching
 - It doesn't know what's inside it (a Modal doesn't know its content)
 
 ### Quick Cheat Sheet
 
-| Item | Where | Why |
-|------|-------|-----|
-| "Add to Cart" Button | `features/cart/` | Contains cart-specific logic |
-| Blue Submit Button | `components/ui/` | Dumb — just styling, no logic |
-| User Settings Form | `features/settings/` | Knows user data + how to save |
-| Modal / Pop-up | `components/ui/` | Container only — no business logic |
-| Comment Section | `features/comments/` | Fetches, displays, allows replies |
+| Item                 | Where                | Why                                |
+| -------------------- | -------------------- | ---------------------------------- |
+| "Add to Cart" Button | `features/cart/`     | Contains cart-specific logic       |
+| Blue Submit Button   | `components/ui/`     | Dumb — just styling, no logic      |
+| User Settings Form   | `features/settings/` | Knows user data + how to save      |
+| Modal / Pop-up       | `components/ui/`     | Container only — no business logic |
+| Comment Section      | `features/comments/` | Fetches, displays, allows replies  |
 
 **Summary Rule:**
+
 - Handles **data** (fetching, saving, business logic) → `features/`
 - Handles **looks** (styling, layout, animation only) → `components/`
 
@@ -93,7 +97,8 @@ src/
 ## Component Implementation Patterns
 
 ### Pattern 1: Hooks as Logic (Required)
-Extract all complex logic into custom hooks. JSX describes *what* to render, hooks handle *how*.
+
+Extract all complex logic into custom hooks. JSX describes _what_ to render, hooks handle _how_.
 
 ```tsx
 // ❌ WRONG — mixed logic and UI
@@ -101,16 +106,19 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/user').then(d => d.json()).then(data => {
-      setUser(data); setLoading(false);
-    });
+    fetch("/api/user")
+      .then((d) => d.json())
+      .then((data) => {
+        setUser(data);
+        setLoading(false);
+      });
   }, []);
   if (loading) return <div>Loading...</div>;
   return <div>{user.name}</div>;
 };
 
 // ✅ CORRECT — logic in hook, JSX stays clean
-import { useUser } from './hooks/useUser';
+import { useUser } from "./hooks/useUser";
 const UserProfile = () => {
   const { user, isLoading, isError } = useUser();
   if (isLoading) return <Spinner />;
@@ -120,12 +128,13 @@ const UserProfile = () => {
 ```
 
 ### Pattern 2: Clean Component File Structure
+
 ```tsx
 // 📁 src/features/products/components/ProductCard.tsx
 
-import { memo } from 'react';
-import { formatCurrency } from '@/utils/currency';
-import { useAddToCart } from '../hooks/useAddToCart';
+import { memo } from "react";
+import { formatCurrency } from "@/utils/currency";
+import { useAddToCart } from "../hooks/useAddToCart";
 
 // 1. Define props interface
 interface ProductCardProps {
@@ -136,47 +145,53 @@ interface ProductCardProps {
 }
 
 // 2. Named export (not default)
-export const ProductCard = memo(({ id, name, price, imageUrl }: ProductCardProps) => {
-  // 3. Logic from hooks only
-  const { addToCart, isAdding } = useAddToCart(id);
+export const ProductCard = memo(
+  ({ id, name, price, imageUrl }: ProductCardProps) => {
+    // 3. Logic from hooks only
+    const { addToCart, isAdding } = useAddToCart(id);
 
-  // 4. Handler functions named handleX
-  const handleAddToCart = () => { addToCart(); };
+    // 4. Handler functions named handleX
+    const handleAddToCart = () => {
+      addToCart();
+    };
 
-  return (
-    <div className="product-card">
-      <img src={imageUrl} alt={name} loading="lazy" />
-      <h3>{name}</h3>
-      <span>{formatCurrency(price)}</span>
-      <button onClick={handleAddToCart} disabled={isAdding}>
-        {isAdding ? 'Adding...' : 'Add to Cart'}
-      </button>
-    </div>
-  );
-});
+    return (
+      <div className="product-card">
+        <img src={imageUrl} alt={name} loading="lazy" />
+        <h3>{name}</h3>
+        <span>{formatCurrency(price)}</span>
+        <button onClick={handleAddToCart} disabled={isAdding}>
+          {isAdding ? "Adding..." : "Add to Cart"}
+        </button>
+      </div>
+    );
+  },
+);
 
 // 5. Display name for debugging
-ProductCard.displayName = 'ProductCard';
+ProductCard.displayName = "ProductCard";
 ```
 
 ### Pattern 3: Barrel Exports (Public API)
+
 Each feature exposes only what others need via `index.ts`:
 
 ```ts
 // src/features/auth/index.ts
-export { LoginForm } from './components/LoginForm';
-export { useAuth } from './hooks/useAuth';
-export type { User, AuthState } from './types';
+export { LoginForm } from "./components/LoginForm";
+export { useAuth } from "./hooks/useAuth";
+export type { User, AuthState } from "./types";
 // Internal helpers are NOT exported — they stay private to the feature
 ```
 
 Usage:
+
 ```ts
 // ✅ Clean import via barrel
-import { LoginForm, useAuth } from '@/features/auth';
+import { LoginForm, useAuth } from "@/features/auth";
 
 // ❌ Avoid deep imports into a feature's internals
-import { LoginForm } from '@/features/auth/components/LoginForm';
+import { LoginForm } from "@/features/auth/components/LoginForm";
 ```
 
 ---
@@ -213,6 +228,7 @@ Apply when writing or reviewing any component:
 ## Route Groups (Next.js App Router)
 
 Folders wrapped in `()` organize code without affecting URLs:
+
 - `(marketing)/about/` → URL: `/about`
 - `(app)/dashboard/` → URL: `/dashboard`
 - `(auth)/login/` → URL: `/login`

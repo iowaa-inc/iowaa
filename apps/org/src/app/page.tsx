@@ -22,7 +22,10 @@ const PAGE_WORDS = [
 export default function Home() {
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">
-      <Preloader words={PAGE_WORDS} wrapperClassName="flex items-center justify-center w-full h-full">
+      <Preloader
+        words={PAGE_WORDS}
+        wrapperClassName="flex items-center justify-center w-full h-full"
+      >
         <div className="flex flex-col flex-1 items-center justify-center h-full space-y-4 text-center px-4 py-24 mx-auto w-full">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter">
             Work in Progress

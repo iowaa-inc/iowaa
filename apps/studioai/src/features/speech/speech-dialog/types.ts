@@ -127,6 +127,7 @@ export interface SpeechDialog {
  * Request type for creating a new speech segment
  */
 export interface CreateSpeechSegmentRequest {
+  id?: string;
   script_id: string;
   order?: number; // If not provided, will be appended to the end
   timestamp?: number; // If not provided, will be calculated based on previous segments

@@ -5,7 +5,7 @@ description: Enforces industry-standard React component naming patterns to avoid
 
 # React Component Naming Conventions
 
-The **Golden Rule**: Clarity over brevity — a long name is better than a vague one. But use the 4 strategies below to keep names both clear *and* short.
+The **Golden Rule**: Clarity over brevity — a long name is better than a vague one. But use the 4 strategies below to keep names both clear _and_ short.
 
 ---
 
@@ -53,10 +53,11 @@ Bundle related sub-components as properties of the main component. Best for reus
 ```
 
 **Implementation:**
+
 ```tsx
 const Modal = ({ children }) => <div className="modal">{children}</div>;
 Modal.Header = ({ children }) => <header>{children}</header>;
-Modal.Body   = ({ children }) => <main>{children}</main>;
+Modal.Body = ({ children }) => <main>{children}</main>;
 export default Modal;
 ```
 
@@ -87,22 +88,22 @@ app/
 
 When you must differentiate between a component's logic and its UI:
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Container (Logic) | `[Entity]Container` or just `[Entity]` | `UserProfile.tsx` |
-| Presentational (UI) | `[Entity]View` or `[Entity]Layout` | `UserProfileView.tsx` |
-| Base/Primitive UI | `Base[Name]` or `[Name]Base` | `BaseButton.tsx` |
+| Type                | Convention                             | Example               |
+| ------------------- | -------------------------------------- | --------------------- |
+| Container (Logic)   | `[Entity]Container` or just `[Entity]` | `UserProfile.tsx`     |
+| Presentational (UI) | `[Entity]View` or `[Entity]Layout`     | `UserProfileView.tsx` |
+| Base/Primitive UI   | `Base[Name]` or `[Name]Base`           | `BaseButton.tsx`      |
 
 ---
 
 ## Quick Reference: Which Strategy to Use
 
-| What you're building | Strategy |
-|---------------------|----------|
+| What you're building                | Strategy                                               |
+| ----------------------------------- | ------------------------------------------------------ |
 | UI Library (Buttons, Modals, Cards) | **Compound Components** — `Card.Title` not `CardTitle` |
-| Page-specific feature component | **Colocation** — put it in `app/feature/_components/` |
-| Complex widget with many parts | **Directory Namespace** — `VideoPlayer/Controls.tsx` |
-| Logic vs. UI split needed | **Suffix** — `UserProfileView.tsx` |
+| Page-specific feature component     | **Colocation** — put it in `app/feature/_components/`  |
+| Complex widget with many parts      | **Directory Namespace** — `VideoPlayer/Controls.tsx`   |
+| Logic vs. UI split needed           | **Suffix** — `UserProfileView.tsx`                     |
 
 ---
 

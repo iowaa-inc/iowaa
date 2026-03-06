@@ -83,19 +83,18 @@ export function SpeechSegmentEditor({
         if (selection && Range.isCollapsed(selection)) {
             const [start] = Range.edges(selection);
 
-            // 1. Get the surrounding word context
-            const wordBefore = Editor.before(editor, start, { unit: "word" });
-            const before = wordBefore && Editor.before(editor, wordBefore);
-            const beforeRange = before && Editor.range(editor, before, start);
+            // 1. Get the surrounding block context up to the cursor
+            const blockStart = Editor.before(editor, start, { unit: "block" });
+            const beforeRange = blockStart && Editor.range(editor, blockStart, start);
             const beforeText = beforeRange && Editor.string(editor, beforeRange);
 
-            // 2. Check for trigger
-            const match = beforeText && beforeText.match(/\/(\w*)$/);
+            // 2. Check for trigger (match slash at start of block or after space)
+            const match = beforeText && beforeText.match(/(?:^|\s)\/(\w*)$/);
 
             if (match && beforeRange) {
                 // Calculate the absolute position where the slash starts
                 const startOfMatchOffset =
-                    Range.start(beforeRange).offset + match.index!;
+                    Range.start(beforeRange).offset + beforeText.lastIndexOf("/");
 
                 // Create a precise range for JUST the trigger text (e.g. "/pause")
                 // This ensures we don't delete the word preceding the slash.

@@ -108,6 +108,53 @@ export type Database = {
           },
         ]
       }
+      speech_segments: {
+        Row: {
+          id: string
+          script_id: string
+          order: number
+          timestamp: number
+          duration: number | null
+          content: Json
+          expressions: Json
+          config: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          script_id: string
+          order: number
+          timestamp: number
+          duration?: number | null
+          content?: Json
+          expressions?: Json
+          config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          script_id?: string
+          order?: number
+          timestamp?: number
+          duration?: number | null
+          content?: Json
+          expressions?: Json
+          config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speech_segments_script_id_fkey"
+            columns: ["script_id"]
+            isOneToOne: false
+            referencedRelation: "scripts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           avatar_url: string | null

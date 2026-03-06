@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Descendant } from 'slate';
 import { Button } from '@repo/ui-core/components/button';
-import { RiAddLine, RiDeleteBinLine } from '@remixicon/react';
+import { RiAddLine, RiDeleteBinLine, RiLoader4Line, RiCheckLine } from '@remixicon/react';
 import { cn } from '@repo/ui-core/lib/utils';
 
 import { SpeechSegment as SpeechSegmentComponent } from '../speech-segment';
@@ -25,7 +25,7 @@ interface SpeechDialogListProps {
  * Individual speech segment item component
  */
 interface SpeechSegmentItemProps {
-  segment: SpeechSegment;
+  segment: SpeechSegment & { _isSyncing?: boolean; _syncError?: boolean };
   onContentChange?: (content: Descendant[]) => void;
   onExpressionsChange?: (expressions: SelectedExpression[]) => void;
   onDelete?: () => void;
@@ -91,7 +91,17 @@ const SpeechSegmentItem: React.FC<SpeechSegmentItemProps> = ({
               }}
             />
 
-            {showDelete && !readOnly && (
+            {segment._isSyncing ? (
+              <div className="flex items-center text-muted-foreground mr-1 h-8 px-2" title="Syncing...">
+                <RiLoader4Line className="size-4 animate-spin" />
+              </div>
+            ) : (
+              <div className="flex items-center text-emerald-500/70 mr-1 h-8 px-2" title="Saved">
+                <RiCheckLine className="size-4" />
+              </div>
+            )}
+
+            {showDelete && !readOnly && !segment._isSyncing && (
               <Button
                 variant="ghost"
                 size="icon"
