@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 
 import { ProjectSelector } from '@/features/project/components/project-selector';

@@ -22,6 +22,7 @@
     "ui": "@repo/ui-core/components"
   },
   "registries": {
-    "@reui": "https://reui.io/r/{style}/{name}.json"
+    "@reui": "https://reui.io/r/{style}/{name}.json",
+    "@elevenlabs-ui": "https://ui.elevenlabs.io/r/{name}.json"
   }
 }
