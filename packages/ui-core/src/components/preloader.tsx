@@ -98,7 +98,7 @@ function WordReveal({ word, isFirst, textColor }: WordRevealProps) {
   const style: React.CSSProperties = {
     display: "block",
     fontFamily: fontForWord(word),
-    fontSize: "clamp(40px, 7vw, 64px)",
+    fontSize: "clamp(24px, 5vw, 48px)",
     fontWeight: 600,
     color: textColor,
     letterSpacing: word.font ? "0.0em" : "-0.06em",
