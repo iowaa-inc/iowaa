@@ -46,7 +46,7 @@ export function SettingsModal({
       const item = group.items.find((i) => i.id === activeTabId);
       if (item) return item;
     }
-    return SETTINGS_GROUPS[0].items[0];
+    return SETTINGS_GROUPS[0]!.items[0]!;
   }, [activeTabId]);
 
   const ActiveComponent = activeItem.component;

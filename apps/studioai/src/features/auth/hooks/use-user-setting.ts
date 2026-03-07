@@ -15,6 +15,8 @@ export function useUserSettings(config?: SWRConfiguration) {
   const response = useSWR<UserSettings, PostgrestError | Error, typeof key>(
     key,
     async ([, userId]) => {
+      if (!userId) throw new Error('User ID not available');
+      
       const { data, error } = await supabase
         .from('user_settings')
         .select('*')

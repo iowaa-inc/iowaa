@@ -54,8 +54,16 @@ export const EnrichmentMenu = ({
             let domRect: DOMRect | null = null;
 
             if (menuMode.type === "insert") {
-                const domRange = ReactEditor.toDOMRange(editor, menuMode.at);
-                domRect = domRange.getBoundingClientRect();
+                try {
+                    const domRange = ReactEditor.toDOMRange(editor, menuMode.at);
+                    domRect = domRange.getBoundingClientRect();
+                } catch (e) {
+                    // Node might not be synced to DOM yet, fallback to native DOM selection
+                    const nativeSelection = window.getSelection();
+                    if (nativeSelection && nativeSelection.rangeCount > 0) {
+                        domRect = nativeSelection.getRangeAt(0).getBoundingClientRect();
+                    }
+                }
             } else if (menuMode.type === "edit") {
                 try {
                     const node = Editor.node(editor, menuMode.path)[0];
@@ -66,9 +74,14 @@ export const EnrichmentMenu = ({
                 }
             }
 
-            if (domRect) {
-                el.style.top = `${domRect.bottom + window.scrollY + 8}px`;
-                el.style.left = `${domRect.left + window.scrollX}px`;
+            if (domRect && domRect.width >= 0 && domRect.height >= 0) {
+                // Ensure the menu handles the page layout via fixed positioning relative to viewport
+                el.style.position = 'fixed';
+                el.style.top = `${domRect.bottom + 8}px`;
+                el.style.left = `${domRect.left}px`;
+                el.style.visibility = 'visible';
+            } else {
+                el.style.visibility = 'hidden';
             }
         }
     }, [menuMode, editor, selectedOption]);

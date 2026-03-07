@@ -22,7 +22,7 @@ function VolumeSubMenu({
 }: VolumeSubMenuProps) {
     // Find the current value, default to 'Normal' (index 2)
     const selectedItems = getItemsForModule("volume");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
     const initialIndex = volumeOptions.findIndex(opt => opt.value === selectedValue);
     const defaultIndex = initialIndex >= 0 ? initialIndex : 2; // 2 is 'Normal' for volume
 
@@ -31,7 +31,7 @@ function VolumeSubMenu({
         const option = volumeOptions.find((opt) => opt.value === value);
         if (!option) return;
         // Remove previous selection if exists
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         addItem(VolumeModule, value);
@@ -39,7 +39,7 @@ function VolumeSubMenu({
 
     // Memoize the active option for display
     const activeOption = useMemo(() => {
-        const v = selectedItems.length > 0 ? selectedItems[0].value : "";
+        const v = selectedItems.length > 0 ? selectedItems[0]?.value : "";
         return volumeOptions.find(opt => opt.value === v) || volumeOptions[defaultIndex];
     }, [selectedItems, defaultIndex]);
 
@@ -52,7 +52,7 @@ function VolumeSubMenu({
                 <span className="text-sm font-medium">Adjust Volume</span>
             </div>
             <RadioGroup
-                value={activeOption.value}
+                value={activeOption?.value}
                 onValueChange={handleSelect}
                 className="w-full max-w-md gap-1"
                 aria-label="Volume"

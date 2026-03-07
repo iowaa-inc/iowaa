@@ -9,7 +9,7 @@ function Component() {
         <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Rate</span>
-                <span className="text-xs font-mono font-medium">{value[0].toFixed(2)}x</span>
+                <span className="text-xs font-mono font-medium">{(value[0] ?? 1.0).toFixed(2)}x</span>
             </div>
             <Slider
                 value={value}

@@ -203,7 +203,7 @@ export const EnrichmentPill = ({
     const focused = useFocused();
     const label = element.enrichment?.label || "Enrichment";
     const intensity = element.enrichment?.intensity;
-    const color = ENRICHMENT_COLORS[label] ?? ENRICHMENT_COLORS["Enrichment"];
+    const color = ENRICHMENT_COLORS[label] ?? ENRICHMENT_COLORS["Enrichment"]!;
 
     return (
         <span

@@ -25,7 +25,7 @@ function PitchSubMenu({
 }: PitchSubMenuProps) {
     // Find the current value, default to 'normal' (index 1)
     const selectedItems = getItemsForModule("pitch");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
     const initialIndex = pitchOptions.findIndex(opt => opt.value === selectedValue);
     const defaultIndex = initialIndex >= 0 ? initialIndex : 1; // 1 is 'Normal' for pitch
 
@@ -34,7 +34,7 @@ function PitchSubMenu({
         const option = pitchOptions.find((opt) => opt.value === value);
         if (!option) return;
         // Remove previous selection if exists
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         addItem(PitchModule, value);
@@ -42,7 +42,7 @@ function PitchSubMenu({
 
     // Memoize the active option for display
     const activeOption = useMemo(() => {
-        const v = selectedItems.length > 0 ? selectedItems[0].value : "";
+        const v = selectedItems.length > 0 ? selectedItems[0]?.value : "";
         return pitchOptions.find(opt => opt.value === v) || pitchOptions[defaultIndex];
     }, [selectedItems, defaultIndex]);
 
@@ -56,7 +56,7 @@ function PitchSubMenu({
             </div>
 
             <RadioGroup
-                value={activeOption.value}
+                value={activeOption?.value}
                 onValueChange={handleSelect}
                 className="w-full max-w-md gap-1"
                 aria-label="Voice Pitch"

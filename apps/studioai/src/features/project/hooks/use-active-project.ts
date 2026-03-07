@@ -19,7 +19,10 @@ export function useActiveProject(config?: SWRConfiguration) {
 
   const response = useSWR<ActiveProjectRow, PostgrestError | Error, typeof key>(
     key,
-    async ([, userId]) => {
+    async (args) => {
+      const userId = args[1];
+      if (!userId) throw new Error('User ID is required');
+
       const { data, error } = await supabase
         .from('user_settings')
         .select('active_project_id, projects:active_project_id (*)')

@@ -220,7 +220,7 @@ export function VoiceProfileSelector() {
   const [playingProfile, setPlayingProfile] = React.useState<string | null>(null);
 
   // Determine current profiles list by selected tab
-  const currentTab = tabsData.find((tab) => tab.value === activeTab) ?? tabsData[0];
+  const currentTab = tabsData.find((tab) => tab.value === activeTab) ?? tabsData[0]!;
   const profiles = currentTab.profiles;
 
   // Filtering
@@ -231,7 +231,7 @@ export function VoiceProfileSelector() {
 
   // Pick first available profile for collapsed button
   const allProfiles = [...communityProfiles, ...projectsProfiles, ...scriptProfiles];
-  const firstProfile = allProfiles[0];
+  const firstProfile = allProfiles[0]!;
 
   // Toggle play/pause for a profile
   const handlePlayPause = (profileName: string) => {

@@ -21,7 +21,7 @@ function TimbreSubMenu({
 }) {
     // Find the current value, default to 'Breathy' (index 0)
     const selectedItems = getItemsForModule("timbre");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
     const initialIndex = timbreOptions.findIndex(opt => opt.value === selectedValue);
     const defaultIndex = initialIndex >= 0 ? initialIndex : 0; // 0 is 'Breathy' for timbre
 
@@ -30,7 +30,7 @@ function TimbreSubMenu({
         const option = timbreOptions.find((opt) => opt.value === value);
         if (!option) return;
         // Remove previous selection if exists
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         addItem(TimbreModule, value);
@@ -38,7 +38,7 @@ function TimbreSubMenu({
 
     // Memoize the active option for display
     const activeOption = useMemo(() => {
-        const v = selectedItems.length > 0 ? selectedItems[0].value : "";
+        const v = selectedItems.length > 0 ? selectedItems[0]?.value : "";
         return timbreOptions.find(opt => opt.value === v) || timbreOptions[defaultIndex];
     }, [selectedItems, defaultIndex]);
 
@@ -53,7 +53,7 @@ function TimbreSubMenu({
 
             <div className="space-y-3">
                 <RadioGroup
-                    value={activeOption.value}
+                    value={activeOption?.value}
                     onValueChange={handleSelect}
                     className="w-full max-w-md gap-1"
                     aria-label="Timbre"

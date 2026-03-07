@@ -97,38 +97,36 @@ export function SpeechSegmentEditor({
 
         if (selection && Range.isCollapsed(selection)) {
             const [start] = Range.edges(selection);
+            const path = start.path;
+            
+            // Get the text in the exact node the cursor is currently in
+            const node = Node.get(editor, path);
+            if (node && SlateElement.isElement(node) === false) { // it's a text node
+                const textBeforeCursor = Node.string(node).slice(0, start.offset);
+                
+                // Match the trigger (slash at start of node or after a space)
+                const match = textBeforeCursor.match(/(?:^|\s)\/(\w*)$/);
 
-            // 1. Get the surrounding block context up to the cursor
-            const blockStart = Editor.before(editor, start, { unit: "block" });
-            const beforeRange = blockStart && Editor.range(editor, blockStart, start);
-            const beforeText = beforeRange && Editor.string(editor, beforeRange);
+                if (match) {
+                    // Calculate precise range within the local text node
+                    const matchText = match[0]; // e.g., " /pause" or "/pause"
+                    const isPrefixedWithSpace = matchText.startsWith(' ');
+                    const slashIndexInsideNode = start.offset - matchText.length + (isPrefixedWithSpace ? 1 : 0);
 
-            // 2. Check for trigger (match slash at start of block or after space)
-            const match = beforeText && beforeText.match(/(?:^|\s)\/(\w*)$/);
+                    const triggerRange: Range = {
+                        anchor: { path, offset: slashIndexInsideNode },
+                        focus: start,
+                    };
 
-            if (match && beforeRange) {
-                // Calculate the absolute position where the slash starts
-                const startOfMatchOffset =
-                    Range.start(beforeRange).offset + beforeText.lastIndexOf("/");
+                    setMenuMode({
+                        type: "insert",
+                        at: triggerRange,
+                    });
 
-                // Create a precise range for JUST the trigger text (e.g. "/pause")
-                // This ensures we don't delete the word preceding the slash.
-                const triggerRange: Range = {
-                    anchor: {
-                        path: beforeRange.anchor.path,
-                        offset: startOfMatchOffset,
-                    },
-                    focus: start, // Current cursor position
-                };
-
-                setMenuMode({
-                    type: "insert",
-                    at: triggerRange, // Use the precise range
-                });
-
-                setSearch(match[1] || "");
-                setIndex(0);
-                return;
+                    setSearch(match[1] || "");
+                    setIndex(0);
+                    return;
+                }
             }
         }
         setMenuMode(null);

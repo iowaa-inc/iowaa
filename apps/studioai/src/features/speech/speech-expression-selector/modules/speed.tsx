@@ -23,7 +23,7 @@ function SpeedSubMenu({
 }: SpeedSubMenuProps) {
     // Find the current index, default to 2 ('Normal')
     const selectedItems = getItemsForModule("speed");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
     const initialIndex = speedOptions.findIndex(opt => opt.value === selectedValue);
     const defaultIndex = initialIndex >= 0 ? initialIndex : 2; // 2 is 'Normal'
 
@@ -32,16 +32,16 @@ function SpeedSubMenu({
 
     // We'll keep the slider snapped to the number of options (0 - 4)
     const handleSliderChange = (valArr: number[]) => {
-        setSliderIndex(valArr[0]);
+        setSliderIndex(valArr[0] ?? 2);
     };
 
     // This saves (selects) the value for the module (if as-you-go: you could trigger here, or on mouseUp)
     const handleSliderCommit = (valArr: number[]) => {
-        const newIdx = valArr[0];
+        const newIdx = valArr[0] ?? 2;
         const selectedOption = speedOptions[newIdx];
         if (!selectedOption) return;
         // Remove previous selection
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         addItem(SpeedModule, selectedOption.value);
@@ -62,8 +62,8 @@ function SpeedSubMenu({
             {/* Display the active label & description above the slider */}
             <div className="space-y-3">
                 <div className="px-1 pb-4">
-                    <FieldLabel>{activeOption.label}</FieldLabel>
-                    <FieldDescription>{activeOption.description}</FieldDescription>
+                    <FieldLabel>{activeOption?.label}</FieldLabel>
+                    <FieldDescription>{activeOption?.description}</FieldDescription>
                 </div>
 
                 <div className="flex flex-col items-center justify-center">

@@ -27,10 +27,10 @@ function EmotionsSubMenu({
 }: EmotionsSubMenuProps) {
     const [search, setSearch] = useState("");
     const selectedItems = getItemsForModule("emotion");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
 
     const handleSelect = (value: string) => {
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         if (selectedValue !== value) {

@@ -25,7 +25,7 @@ function IntonationSubMenu({
 }: IntonationSubMenuProps) {
     // Get current selected item for intonation, or default to first option
     const selectedItems = getItemsForModule("intonation");
-    const selectedValue = selectedItems.length > 0 ? selectedItems[0].value : "";
+    const selectedValue = selectedItems.length > 0 ? selectedItems[0]?.value : "";
     const initialIndex = intonationOptions.findIndex(opt => opt.value === selectedValue);
     const defaultIndex = initialIndex >= 0 ? initialIndex : 0; // 0 is the default for intonation
 
@@ -33,7 +33,7 @@ function IntonationSubMenu({
         const option = intonationOptions.find((opt) => opt.value === value);
         if (!option) return;
         // Remove previous selection if exists
-        if (selectedItems.length > 0) {
+        if (selectedItems.length > 0 && selectedItems[0]) {
             removeItem(selectedItems[0].id);
         }
         addItem(IntonationModule, value);
@@ -41,7 +41,7 @@ function IntonationSubMenu({
 
     // Memoize the active option for display
     const activeOption = useMemo(() => {
-        const v = selectedItems.length > 0 ? selectedItems[0].value : "";
+        const v = selectedItems.length > 0 ? selectedItems[0]?.value : "";
         return intonationOptions.find(opt => opt.value === v) || intonationOptions[defaultIndex];
     }, [selectedItems, defaultIndex]);
 
@@ -55,7 +55,7 @@ function IntonationSubMenu({
             </div>
 
             <RadioGroup
-                value={activeOption.value}
+                value={activeOption?.value}
                 onValueChange={handleSelect}
                 className="w-full max-w-md gap-1"
                 aria-label="Intonation"
