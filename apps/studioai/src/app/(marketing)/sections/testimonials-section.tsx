@@ -1,58 +1,106 @@
 "use client";
 
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Badge } from "@repo/ui-core/components/badge";
-import { Card, CardContent } from "@repo/ui-core/components/card";
 import { Avatar, AvatarFallback } from "@repo/ui-core/components/avatar";
 import { testimonials } from "@/config/landing-content";
 
+const STEP_DURATION = 5000; // ms each testimonial displays
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export function TestimonialsSection() {
+  const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const count = testimonials.items.length;
+
+  // rAF-driven progress + auto-advance
+  useEffect(() => {
+    setProgress(0);
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const pct = Math.min(((now - startTime) / STEP_DURATION) * 100, 100);
+      setProgress(pct);
+      if (pct < 100) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        setActive((prev) => (prev + 1) % count);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [active, count]);
+
+  const goTo = useCallback((index: number) => {
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    setActive(index);
+  }, []);
+
+  const current = testimonials.items[active]!;
+
   return (
-    <section className="py-24 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex flex-col items-center text-center space-y-4 mb-16">
-          <Badge variant="secondary" className="px-4 py-1.5 text-sm">
+    <section id="testimonials" className="py-24 md:py-32">
+      <div className="container mx-auto px-6 md:px-10 lg:px-16">
+
+        {/* Section header */}
+        <div className="flex flex-col items-center text-center gap-4 mb-14">
+          <Badge variant="secondary" className="w-fit">
             {testimonials.sectionBadge}
           </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
             {testimonials.sectionTitle}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
+          <p className="text-base text-muted-foreground leading-relaxed max-w-xl">
             {testimonials.sectionDescription}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {testimonials.items.map((testimonial, index) => (
-            <Card
-              key={index}
-              className="border-border/50 bg-background/50 backdrop-blur-sm"
-            >
-              <CardContent className="p-6 space-y-4">
-                <p className="text-muted-foreground leading-relaxed italic">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
+        {/* Testimonial card */}
+        <div className="rounded-2xl bg-muted/40 px-8 md:px-16 lg:px-24 py-14 md:py-20 flex flex-col items-center text-center gap-8 max-w-7xl mx-auto">
 
-                <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-                  <Avatar>
-                    <AvatarFallback>
-                      {testimonial.author
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <div className="text-sm font-semibold">
-                      {testimonial.author}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {testimonial.role}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {/* Avatar */}
+          <Avatar className="w-14 h-14">
+            <AvatarFallback className="text-base font-semibold bg-primary/10 text-primary">
+              {current.author.split(" ").map((n) => n[0]).join("")}
+            </AvatarFallback>
+          </Avatar>
+
+          {/* Quote */}
+          <blockquote className="text-xl md:text-2xl font-medium leading-relaxed tracking-tight text-foreground max-w-2xl">
+            &ldquo;{current.quote}&rdquo;
+          </blockquote>
+
+          {/* Author */}
+          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+            <span className="text-base font-semibold">{current.author}</span>
+            <span className="hidden sm:inline text-muted-foreground/50">·</span>
+            <span className="text-base text-muted-foreground">{current.role}</span>
+          </div>
+
+          {/* Progress loaders */}
+          <div className="flex items-center gap-2 w-full max-w-xs">
+            {testimonials.items.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
+                className="flex-1 h-1 rounded-full bg-border overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div
+                  className="h-full bg-foreground rounded-full transition-none"
+                  style={{
+                    width: i < active ? "100%" : i === active ? `${progress}%` : "0%",
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>

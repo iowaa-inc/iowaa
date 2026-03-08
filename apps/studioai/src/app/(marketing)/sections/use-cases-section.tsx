@@ -101,7 +101,7 @@ export function UseCasesSection() {
           <div className="flex min-h-[720px]">
             {/* Left: text */}
             <div className="flex flex-col justify-center gap-6 px-10 py-10 w-[38%] shrink-0">
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-6">
                 <h2 className="text-2xl font-semibold tracking-tight leading-snug">
                   {active.title}
                 </h2>
