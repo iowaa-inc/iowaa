@@ -1,66 +1,132 @@
 "use client";
 
+import { RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
+import { Button } from "@repo/ui-core/components/button";
 import {
-  RiMicLine,
-  RiEmotionLine,
-  RiTextSpacing,
-  RiTeamLine,
-  RiFileListLine,
-  RiSettings3Line,
-} from "@remixicon/react";
-import { Badge } from "@repo/ui-core/components/badge";
-import { Card, CardContent } from "@repo/ui-core/components/card";
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  useCarousel,
+} from "@repo/ui-core/components/carousel";
 import { features } from "@/config/landing-content";
 
-const iconMap = {
-  mic: RiMicLine,
-  emotion: RiEmotionLine,
-  text: RiTextSpacing,
-  team: RiTeamLine,
-  "file-list": RiFileListLine,
-  settings: RiSettings3Line,
-};
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-24 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex flex-col items-center text-center space-y-4 mb-16">
-          <Badge variant="secondary" className="px-4 py-1.5 text-sm">
-            {features.sectionBadge}
-          </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            {features.sectionTitle}
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            {features.sectionDescription}
-          </p>
-        </div>
+    <section id="features" className="py-24 md:py-32 overflow-hidden">
+      <div className="container mx-auto px-6 md:px-10 lg:px-16">
+        <Carousel
+          opts={{
+            align: "start",
+            dragFree: true,
+          }}
+        >
+          {/* Header row with title + arrows in the same flex row */}
+          <div className="flex items-end justify-between gap-8 mb-12">
+            {/* Left: eyebrow + heading */}
+            <div className="max-w-2xl space-y-4">
+              <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+                {features.sectionBadge}
+              </p>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1]">
+                {features.sectionTitle}
+              </h2>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {features.items.map((feature, index) => {
-            const Icon = iconMap[feature.icon as keyof typeof iconMap];
-            return (
-              <Card
-                key={index}
-                className="border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/50 transition-all duration-300"
+            {/* Right: nav arrows — wired to Embla via context */}
+            <div className="flex items-center gap-2 shrink-0 pb-1">
+              <CarouselNavPrev />
+              <CarouselNavNext />
+            </div>
+          </div>
+
+          {/* Carousel track */}
+          <CarouselContent className="-ml-6">
+            {features.items.map((feature, i) => (
+              <CarouselItem
+                key={i}
+                className="pl-6 basis-[400px] md:basis-[440px] lg:basis-[420px]"
               >
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary">
-                    {Icon && <Icon className="h-6 w-6" />}
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                <FeatureCard
+                  title={feature.title}
+                  description={feature.description}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </section>
+  );
+}
+
+// ─── Custom nav buttons (consume CarouselContext) ─────────────────────────────
+
+function CarouselNavPrev() {
+  const { scrollPrev, canScrollPrev } = useCarousel();
+  return (
+    <Button
+    className="rounded-full"
+      id="features-prev"
+      aria-label="Previous features"
+      variant="secondary"
+      size="icon-lg"
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
+    >
+      <RiArrowLeftLine />
+    </Button>
+  );
+}
+
+function CarouselNavNext() {
+  const { scrollNext, canScrollNext } = useCarousel();
+  return (
+    <Button
+    className="rounded-full"
+      id="features-next"
+      aria-label="Next features"
+      variant="secondary"
+      size="icon-lg"
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+    >
+      <RiArrowRightLine />
+    </Button>
+  );
+}
+
+// ─── FeatureCard ──────────────────────────────────────────────────────────────
+
+interface FeatureCardProps {
+  title: string;
+  description: string;
+}
+
+function FeatureCard({ title, description }: FeatureCardProps) {
+  return (
+    <article className="group flex flex-col">
+      {/* Image well — muted surface, ready for a real <Image /> drop-in */}
+      <div
+        className="
+          relative w-full rounded-xl overflow-hidden
+          bg-muted
+          aspect-4/5
+          mb-5
+          transition-transform duration-300 ease-out
+          group-hover:-translate-y-1
+        "
+        aria-hidden
+      />
+
+      {/* Text */}
+      <div className="space-y-2 px-1">
+        <h3 className="text-base font-semibold leading-snug">{title}.</h3>
+        <p className="text-base text-muted-foreground leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </article>
   );
 }

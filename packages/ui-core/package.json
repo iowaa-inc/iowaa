@@ -46,6 +46,7 @@
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:",
+    "embla-carousel-react": "catalog:",
     "zod": "catalog:"
   }
 }
