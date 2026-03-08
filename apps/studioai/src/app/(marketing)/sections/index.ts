@@ -1,0 +1,11 @@
+export { HeroSection } from "./hero-section";
+export { FeaturesSection } from "./features-section";
+export { VoiceLibrarySection } from "./voice-library-section";
+export { VoiceCustomizationSection } from "./voice-customization-section";
+export { HowItWorksSection } from "./how-it-works-section";
+export { UseCasesSection } from "./use-cases-section";
+export { TestimonialsSection } from "./testimonials-section";
+export { PricingSection } from "./pricing-section";
+export { FAQSection } from "./faq-section";
+export { FinalCtaSection } from "./final-cta-section";
+export { FooterSection } from "./footer-section";

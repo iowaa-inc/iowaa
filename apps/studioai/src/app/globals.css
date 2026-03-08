@@ -3,14 +3,20 @@
 
 @source "../../../../packages/ui-core/src/components";
 
+@theme inline {
+  --font-google-sans: var(--font-google-sans);
+}
+
 /* Prevent horizontal overflow at the root level */
-html,
-body {
+html {
   overflow-x: hidden;
   max-width: 100vw;
+  scroll-behavior: smooth;
 }
 
 body {
+  overflow-x: hidden;
+  max-width: 100vw;
   overflow-y: auto;
 }
 

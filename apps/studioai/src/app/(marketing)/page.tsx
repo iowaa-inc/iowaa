@@ -1,36 +1,49 @@
 "use client";
 
 import { Preloader } from "@repo/ui-core/components/preloader";
+import {
+  HeroSection,
+  FeaturesSection,
+  VoiceLibrarySection,
+  VoiceCustomizationSection,
+  HowItWorksSection,
+  UseCasesSection,
+  TestimonialsSection,
+  PricingSection,
+  FAQSection,
+  FinalCtaSection,
+  FooterSection,
+} from "./sections";
 
 const PAGE_WORDS = [
-  { text: "Hello", lang: "en", font: null },
-  { text: "Bonjour", lang: "fr", font: null },
-  { text: "Hola", lang: "es", font: null },
-  { text: "Olà", lang: "pt", font: null },
-  { text: "Ciao", lang: "it", font: null },
-  { text: "Hallå", lang: "sv", font: null },
-  { text: "Guten Tag", lang: "de", font: null },
-  { text: "こんにちは", lang: "ja", font: "'Noto Sans JP', sans-serif" },
-  {
-    text: "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ",
-    lang: "pa",
-    font: "'Noto Sans Gurmukhi', sans-serif",
-  },
-  { text: "مرحبا", lang: "ar", font: "'Noto Sans Arabic', sans-serif" },
+  { text: "Audiobooks", lang: "en", font: null },
+  { text: "Podcasts", lang: "en", font: null },
+  { text: "Training", lang: "en", font: null },
+  { text: "Games", lang: "en", font: null },
+  { text: "Marketing", lang: "en", font: null },
+  { text: "Production", lang: "en", font: null },
+  { text: "Professional", lang: "en", font: null },
+  { text: "Studio", lang: "en", font: null },
+  { text: "Broadcast", lang: "en", font: null },
+  { text: "Content", lang: "en", font: null },
 ];
 
 export default function Home() {
   return (
-    <main className="relative flex-1 w-full overflow-hidden bg-background flex flex-col">
-      <Preloader words={PAGE_WORDS} wrapperClassName="flex items-center justify-center w-full h-full">
-        <div className="flex flex-col flex-1 items-center justify-center h-full space-y-4 text-center px-4 py-24 mx-auto w-full">
-          <h1 className="text-4xl font-extrabold tracking-tighter">
-            Work in Progress
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-[400px]">
-            We are currently building something amazing. Please check back
-            later.
-          </p>
+    <main className="relative w-full overflow-hidden bg-background">
+      <Preloader words={PAGE_WORDS}>
+        <div>
+          <HeroSection />
+          <FeaturesSection />
+          <VoiceLibrarySection />
+          <VoiceCustomizationSection />
+          <HowItWorksSection />
+          <UseCasesSection />
+          <TestimonialsSection />
+          <PricingSection />
+          <FAQSection />
+          <FinalCtaSection />
+          <FooterSection />
         </div>
       </Preloader>
     </main>

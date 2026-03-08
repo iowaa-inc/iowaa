@@ -315,7 +315,7 @@ function PreloaderOverlay({
 export function Preloader({
   words,
   children,
-  wrapperClassName = "flex flex-col items-center w-full",
+  wrapperClassName = "",
   firstHoldMs = DEFAULT_FIRST_HOLD_MS,
   holdMs = DEFAULT_HOLD_MS,
   wipeMs = DEFAULT_WIPE_MS,
