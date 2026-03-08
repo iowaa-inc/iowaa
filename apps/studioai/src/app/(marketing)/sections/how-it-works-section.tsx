@@ -1,74 +1,129 @@
 "use client";
 
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Badge } from "@repo/ui-core/components/badge";
 import { howItWorks } from "@/config/landing-content";
 
+// Duration each step stays active before auto-advancing
+const STEP_DURATION = 4500; // ms
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export function HowItWorksSection() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const stepCount = howItWorks.steps.length;
+
+  // Animate progress bar and auto-advance using rAF
+  useEffect(() => {
+    setProgress(0);
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const pct = Math.min((elapsed / STEP_DURATION) * 100, 100);
+      setProgress(pct);
+
+      if (pct < 100) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        // Advance to next step (loops back to 0)
+        setActiveStep((prev) => (prev + 1) % stepCount);
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [activeStep, stepCount]);
+
+  // On user click — jump to step (effect cleanup + restart handles timer reset)
+  const handleStepClick = useCallback((index: number) => {
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    setActiveStep(index);
+  }, []);
+
   return (
-    <section id="how-it-works" className="py-24 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex flex-col items-center text-center space-y-4 mb-16">
-          <Badge variant="secondary" className="px-4 py-1.5 text-sm">
-            {howItWorks.sectionBadge}
-          </Badge>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight max-w-3xl">
-            {howItWorks.sectionTitle}
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            {howItWorks.sectionDescription}
-          </p>
-        </div>
+    <section id="how-it-works" className="py-24 md:py-32">
+      <div className="container mx-auto px-6 md:px-10 lg:px-16">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 lg:items-start">
 
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-border hidden sm:block" />
+          {/* ── Left: heading + animated step list ───────────────── */}
+          <div className="flex flex-col gap-60 lg:w-[38%] lg:sticky lg:top-24">
 
-          <div className="space-y-16">
-            {howItWorks.steps.map((step, index) => (
-              <div
-                key={index}
-                className={`relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${
-                  index % 2 === 0 ? "" : "md:flex-row-reverse"
-                }`}
-              >
-                {/* Step number badge */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xl border-4 border-background z-10">
-                  {step.step}
-                </div>
+            {/* Section heading */}
+            <div className="flex flex-col gap-4">
+              <Badge variant="secondary" className="w-fit">
+                {howItWorks.sectionBadge}
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
+                {howItWorks.sectionTitle}
+              </h2>
+              <p className="text-base text-muted-foreground leading-relaxed">
+                {howItWorks.sectionDescription}
+              </p>
+            </div>
 
-                {/* Content */}
-                <div
-                  className={`pl-24 md:pl-0 ${
-                    index % 2 === 0
-                      ? "md:pr-12 md:text-right md:order-1"
-                      : "md:pl-12 md:order-2"
-                  }`}
-                >
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold">{step.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
+            {/* Step list */}
+            <ol className="flex flex-col">
+              {howItWorks.steps.map((step, index) => {
+                const isActive = activeStep === index;
+                const isLast = index === stepCount - 1;
 
-                {/* Image slot */}
-                <div
-                  className={`${
-                    index % 2 === 0 ? "md:order-2" : "md:order-1"
-                  }`}
-                >
-                  <div className="relative aspect-4/3 rounded-xl border border-border bg-muted/50 overflow-hidden backdrop-blur-sm">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-muted-foreground/50 text-sm">
-                        [{step.imageSlot}]
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                return (
+                  <li key={step.step}>
+                    <button
+                      onClick={() => handleStepClick(index)}
+                      className="w-full text-left flex flex-col gap-2 py-4 focus-visible:outline-none"
+                      aria-expanded={isActive}
+                    >
+                      {/* Title */}
+                      <span
+                        className={`text-base font-medium transition-colors duration-200 ${
+                          isActive
+                            ? "text-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {step.title}
+                      </span>
+
+                      {/* Description — only visible on active step */}
+                      {isActive && (
+                        <span className="text-base text-muted-foreground leading-relaxed block">
+                          {step.description}
+                        </span>
+                      )}
+
+                      {/* Progress bar — only on active step */}
+                      {isActive && (
+                        <div className="w-full h-px bg-border mt-1 overflow-hidden rounded-full">
+                          <div
+                            className="h-full bg-foreground rounded-full"
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      )}
+                    </button>
+
+                    {/* Divider between steps */}
+                    {!isLast && !isActive && (
+                      <div className="h-px w-full bg-border" />
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
           </div>
+
+          {/* ── Right: image panel ────────────────────────────────── */}
+          <div className="flex-1 lg:sticky lg:top-24">
+            <div className="w-full aspect-4/4 rounded-2xl bg-muted" />
+          </div>
+
         </div>
       </div>
     </section>
