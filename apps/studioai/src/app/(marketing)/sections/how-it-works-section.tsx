@@ -58,7 +58,7 @@ export function HowItWorksSection() {
                     index % 2 === 0 ? "md:order-2" : "md:order-1"
                   }`}
                 >
-                  <div className="relative aspect-[4/3] rounded-xl border border-border bg-muted/50 overflow-hidden backdrop-blur-sm">
+                  <div className="relative aspect-4/3 rounded-xl border border-border bg-muted/50 overflow-hidden backdrop-blur-sm">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-muted-foreground/50 text-sm">
                         [{step.imageSlot}]
