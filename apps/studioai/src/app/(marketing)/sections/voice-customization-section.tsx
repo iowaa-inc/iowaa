@@ -1,6 +1,7 @@
-import { RiCheckLine } from "@remixicon/react";
+import { RiArrowRightLine, RiCheckLine } from "@remixicon/react";
 import { voiceCustomization } from "@/config/landing-content";
 import { Badge } from "@repo/ui-core/components/badge";
+import { Button } from "@repo/ui-core/components/button";
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
@@ -9,99 +10,94 @@ export function VoiceCustomizationSection() {
     <section id="voice-direction" className="py-24 md:py-32">
       <div className="container mx-auto px-6 md:px-10 lg:px-16">
 
-        {/* Section header */}
-        <div className="flex flex-col items-center text-center gap-4 mb-20 md:mb-28">
-          <Badge variant="secondary" className="p-4 text-sm">
+        {/* Section header — left-aligned */}
+        <div className="flex flex-col gap-4 mb-16 md:mb-20 max-w-2xl">
+          <Badge variant="secondary" className="w-fit">
             {voiceCustomization.sectionBadge}
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
             {voiceCustomization.sectionTitle}
           </h2>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-xl">
+          <p className="text-base text-muted-foreground leading-relaxed">
             {voiceCustomization.sectionDescription}
           </p>
         </div>
 
-        {/* Alternating rows */}
-        <div className="flex flex-col gap-24 md:gap-32 max-w-4xl mx-auto">
-          {voiceCustomization.layers.map((layer, index) => {
-            const isImageLeft = index % 2 === 0;
-            return (
-              <DirectionRow
-                key={layer.number}
-                number={layer.number}
-                title={layer.title}
-                description={layer.description}
-                features={layer.features as readonly string[]}
-                imageSlot={layer.imageSlot}
-                isImageLeft={isImageLeft}
-              />
-            );
-          })}
+        {/* Rows */}
+        <div className="flex flex-col">
+          {voiceCustomization.layers.map((layer, index) => (
+            <LayerRow
+              key={layer.number}
+              number={layer.number}
+              title={layer.title}
+              description={layer.description}
+              features={layer.features as readonly string[]}
+              isLast={index === voiceCustomization.layers.length - 1}
+            />
+          ))}
         </div>
+
       </div>
     </section>
   );
 }
 
-// ─── DirectionRow ─────────────────────────────────────────────────────────────
+// ─── LayerRow ─────────────────────────────────────────────────────────────────
 
-interface DirectionRowProps {
+interface LayerRowProps {
   number: string;
   title: string;
   description: string;
   features: readonly string[];
-  imageSlot: string;
-  isImageLeft: boolean;
+  isLast: boolean;
 }
 
-function DirectionRow({
-  number,
-  title,
-  description,
-  features,
-  isImageLeft,
-}: DirectionRowProps) {
-  const imageWell = (
-    <div className="shrink-0 w-100">
-      <div className="w-full aspect-square rounded-xl bg-muted" />
-    </div>
-  );
-
+function LayerRow({ number, title, description, features, isLast }: LayerRowProps) {
   return (
-    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-16">
+    <div className={`flex flex-col lg:flex-row gap-12 lg:gap-16 py-16 md:py-20 ${!isLast ? "border-b border-border" : ""}`}>
 
-      {/* Image — left or right */}
-      {isImageLeft && imageWell}
+      {/* Left: text block */}
+      <div className="lg:w-[42%] shrink-0 flex flex-col justify-between gap-10">
+        <div className="flex flex-col gap-6">
+          {/* Eyebrow number */}
+          <p className="text-sm font-semibold text-primary tracking-widest uppercase">
+            {number}
+          </p>
 
-      {/* Text */}
-      <div className="flex-1 flex flex-col gap-6">
-        {/* <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          {number}
-        </p> */}
-
-        <div className="flex flex-col gap-4">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
+          {/* Title */}
+          <h3 className="text-2xl md:text-3xl font-semibold tracking-tight leading-[1.2]">
             {title}
-          </h2>
+          </h3>
+
+          {/* Description */}
           <p className="text-base text-muted-foreground leading-relaxed">
             {description}
           </p>
+
+          {/* Feature bullet list */}
+          <ul className="flex flex-col gap-2.5 pt-1">
+            {features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <RiCheckLine className="mt-0.5 shrink-0 w-4 h-4 text-primary" />
+                <span className="text-base leading-snug text-muted-foreground">{f}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <ul className="flex flex-col gap-3">
-          {features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <RiCheckLine className="mt-0.5 shrink-0 w-5 h-5 text-primary" />
-              <span className="text-base leading-snug">
-                {feature}
-              </span>
-            </li>
-          ))}
-        </ul>
+        {/* CTA */}
+        <div>
+          <Button variant="outline" size="default" className="gap-2">
+            Learn more
+            <RiArrowRightLine className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
-      {!isImageLeft && imageWell}
+      {/* Right: image panel */}
+      <div className="flex-1 flex items-start justify-center md:justify-end">
+        <div className="w-full md:max-w-md aspect-square rounded-2xl bg-muted" />
+      </div>
 
     </div>
   );
