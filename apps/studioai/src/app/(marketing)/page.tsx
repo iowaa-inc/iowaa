@@ -5,6 +5,7 @@ import {
   HeroSection,
   FeaturesSection,
   VoiceLibrarySection,
+  VoiceCapabilitiesSection,
   VoiceCustomizationSection,
   HowItWorksSection,
   UseCasesSection,
@@ -36,6 +37,7 @@ export default function Home() {
           <HeroSection />
           <FeaturesSection />
           <VoiceLibrarySection />
+          <VoiceCapabilitiesSection />
           <VoiceCustomizationSection />
           <HowItWorksSection />
           <UseCasesSection />

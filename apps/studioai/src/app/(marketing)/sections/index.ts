@@ -1,6 +1,7 @@
 export { HeroSection } from "./hero-section";
 export { FeaturesSection } from "./features-section";
 export { VoiceLibrarySection } from "./voice-library-section";
+export { VoiceCapabilitiesSection } from "./voice-capabilities-section";
 export { VoiceCustomizationSection } from "./voice-customization-section";
 export { HowItWorksSection } from "./how-it-works-section";
 export { UseCasesSection } from "./use-cases-section";
