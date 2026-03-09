@@ -13,7 +13,6 @@ import {
   RiArrowRightLine,
 } from "@remixicon/react";
 import { Button } from "@repo/ui-core/components/button";
-import { Badge } from "@repo/ui-core/components/badge";
 import {
   Carousel,
   CarouselContent,
@@ -41,14 +40,14 @@ export function UseCasesSection() {
   const active = useCases.cases[activeIndex]!;
 
   return (
-    <section id="use-cases" className="py-24 md:py-32">
+    <section id="use-cases" className="py-24 md:py-32 bg-muted/30">
       <div className="container mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-12">
 
         {/* Section header */}
         <div className="flex flex-col items-center text-center gap-4">
-          <Badge variant="secondary" className="w-fit">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
             {useCases.sectionBadge}
-          </Badge>
+          </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
             {useCases.sectionTitle}
           </h2>
@@ -59,7 +58,7 @@ export function UseCasesSection() {
 
 
         {/* ── Desktop layout ──────────────────────────────────────── */}
-        <div className="hidden md:flex flex-col gap-0 rounded-2xl border border-border overflow-hidden">
+        <div className="hidden lg:flex flex-col gap-0 rounded-2xl border border-border overflow-hidden">
 
           {/* Tab strip */}
           <div className="flex border-b border-border bg-muted/40">
@@ -130,14 +129,14 @@ export function UseCasesSection() {
             </div>
 
             {/* Right: image */}
-            <div className="flex-1 p-8 flex items-center justify-center">
+            <div className="flex-1 p-8 flex items-center justify-end">
               <div className="aspect-square h-full max-h-full rounded-xl bg-muted" />
             </div>
           </div>
         </div>
 
         {/* ── Mobile layout — Carousel ─────────────────────────── */}
-        <div className="md:hidden flex flex-col gap-5">
+        <div className="lg:hidden flex flex-col gap-5">
           <Carousel opts={{ align: "start" }}>
 
             {/* Category badge selector — inside Carousel so it can use context */}

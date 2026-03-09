@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Badge } from "@repo/ui-core/components/badge";
+
 import { BarVisualizer } from "@repo/ui-core/components/bar-visualizer";
 import { RiPlayFill, RiStopFill, RiGlobalLine } from "@remixicon/react";
 import { voiceLibrary } from "@/config/landing-content";
@@ -95,14 +95,14 @@ export function VoiceLibrarySection() {
   const region = REGIONS.find((r) => r.id === activeRegion)!;
 
   return (
-    <section id="voice-library" className="py-24 md:py-32 bg-muted/30">
+    <section id="voice-library" className="py-24 md:py-32">
       <div className="container mx-auto px-6 md:px-10 lg:px-16">
 
         {/* Section header */}
         <div className="flex flex-col items-center text-center gap-4 mb-14">
-          <Badge variant="secondary" className="w-fit">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
             {voiceLibrary.sectionBadge}
-          </Badge>
+          </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
             {voiceLibrary.sectionTitle}
           </h2>
@@ -211,7 +211,7 @@ export function VoiceLibrarySection() {
                 return (
                   <div
                     key={voice.id}
-                    className={`transition-colors duration-150 ${isActive ? "bg-muted/30" : ""}`}
+                    className={`transition-colors duration-150 ${isActive ? "bg-muted/50" : ""}`}
                   >
                     {/* Voice row — clickable header */}
                     <button

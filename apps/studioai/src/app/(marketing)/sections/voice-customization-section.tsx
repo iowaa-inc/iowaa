@@ -1,20 +1,20 @@
 import { RiArrowRightLine, RiCheckLine } from "@remixicon/react";
 import { voiceCustomization } from "@/config/landing-content";
-import { Badge } from "@repo/ui-core/components/badge";
+
 import { Button } from "@repo/ui-core/components/button";
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function VoiceCustomizationSection() {
   return (
-    <section id="voice-direction" className="py-24 md:py-32">
+    <section id="voice-direction" className="py-24 md:py-32 bg-muted/60">
       <div className="container mx-auto px-6 md:px-10 lg:px-16">
 
         {/* Section header — left-aligned */}
         <div className="flex flex-col gap-4 mb-16 md:mb-20 max-w-2xl">
-          <Badge variant="secondary" className="w-fit">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
             {voiceCustomization.sectionBadge}
-          </Badge>
+          </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
             {voiceCustomization.sectionTitle}
           </h2>

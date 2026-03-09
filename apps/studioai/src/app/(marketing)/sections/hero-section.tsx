@@ -4,71 +4,113 @@ import Link from "next/link";
 import { Button } from "@repo/ui-core/components/button";
 import { Badge } from "@repo/ui-core/components/badge";
 import { hero } from "@/config/landing-content";
-import { Separator } from "@repo/ui-core/components/separator";
+import {
+  RiBookOpenLine,
+  RiMicLine,
+  RiPlayLine,
+  RiGamepadLine,
+  RiArrowRightLine,
+} from "@remixicon/react";
+
+const PRODUCTION_ICONS = {
+  book:    RiBookOpenLine,
+  mic:     RiMicLine,
+  play:    RiPlayLine,
+  gamepad: RiGamepadLine,
+} as const;
+
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-background" />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl" />
-      </div>
+    <section id="hero" className="py-24 md:py-32">
+      <div className="container mx-auto px-6 md:px-10 lg:px-16">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
 
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex flex-col items-center text-center py-24 md:py-32 lg:py-40 lg:pb-20 space-y-12">
-          {/* Badge */}
-          <Badge variant="secondary" className="p-4 text-sm">
-            {hero.badge}
-          </Badge>
+          {/* ── Left: text block ────────────────────────────────────── */}
+          <div className="flex-1 flex flex-col gap-8 lg:pt-6">
 
-          {/* Headline */}
-          <div className="space-y-4 max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-semibold tracking-tight">
-              {hero.headline}
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              {hero.subheadline}
-            </p>
-          </div>
+            {/* Badge */}
+            <Badge variant="secondary" className="w-fit p-4 text-sm">
+              {hero.badge}
+            </Badge>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <Button size="lg" asChild>
-              <Link href={hero.cta.primary.href}>
-                {hero.cta.primary.text}
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href={hero.cta.secondary.href}>
-                {hero.cta.secondary.text}
-              </Link>
-            </Button>
-          </div>
-
-          <Separator className="max-w-xl mx-auto" />
-          
-          {/* Stats */}
-          <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
-          {hero.stats.map((stat) => (
-            <div key={stat.value} className="mx-auto flex max-w-xs flex-col gap-y-4">
-              <dt className="text-base text-gray-400">{stat.label}</dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight text-white sm:text-4xl">{stat.value}</dd>
+            {/* Headline */}
+            <div className="flex flex-col gap-4">
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-semibold tracking-tight leading-[1.1]">
+                {hero.headline}
+              </h1>
+              <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
+                {hero.subheadline}
+              </p>
             </div>
-          ))}
-        </dl>
 
-          {/* Image/Video slot */}
-          <div className="w-full max-w-5xl">
-            <div className="relative aspect-video rounded-xl border border-border bg-muted/50 overflow-hidden backdrop-blur-sm">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-muted-foreground/50 text-sm">
-                  [Hero Demo Video/Screenshot]
-                </div>
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3">
+              <Button size="default" asChild className="gap-2">
+                <Link href={hero.cta.primary.href}>
+                  {hero.cta.primary.text}
+                  <RiArrowRightLine className="w-4 h-4" />
+                </Link>
+              </Button>
+              <Button size="default" variant="outline" asChild>
+                <Link href={hero.cta.secondary.href}>
+                  {hero.cta.secondary.text}
+                </Link>
+              </Button>
+            </div>
+
+            {/* Production type chips */}
+            <div className="flex flex-col gap-2.5">
+              <p className="text-sm text-muted-foreground">
+                {hero.productionTypes.label}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {hero.productionTypes.items.map((item) => {
+                  const Icon = PRODUCTION_ICONS[item.icon as keyof typeof PRODUCTION_ICONS];
+                  return (
+                    <span
+                      key={item.name}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-sm text-muted-foreground"
+                    >
+                      {Icon && <Icon className="w-3.5 h-3.5" />}
+                      {item.name}
+                    </span>
+                  );
+                })}
               </div>
             </div>
+
+            {/* Stats */}
+            <div className="flex flex-wrap gap-x-10 gap-y-4 pt-2 border-t border-border">
+              {hero.stats.map((stat) => (
+                <div key={stat.value} className="flex flex-col gap-0.5">
+                  <span className="text-2xl font-semibold tracking-tight">
+                    {stat.value}
+                  </span>
+                  <span className="text-sm text-muted-foreground">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+
           </div>
+
+          {/* ── Right: image panel ──────────────────────────────────── */}
+          <div className="w-full lg:w-[50%] shrink-0">
+            <div className="flex flex-col gap-3">
+
+              {/* Main wide image */}
+              <div className="w-full aspect-4/3 rounded-2xl bg-muted border border-border" />
+
+              {/* Two small images beneath */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="aspect-4/3 rounded-xl bg-muted border border-border" />
+                <div className="aspect-4/3 rounded-xl bg-muted border border-border" />
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

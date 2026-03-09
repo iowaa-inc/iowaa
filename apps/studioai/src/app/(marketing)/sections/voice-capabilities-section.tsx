@@ -1,94 +1,64 @@
 import {
   RiCheckLine,
-  RiMicLine,
-  RiBookOpenLine,
-  RiGlobalLine,
-  RiArchiveLine,
 } from "@remixicon/react";
-import { Badge } from "@repo/ui-core/components/badge";
-import { voiceLibrary } from "@/config/landing-content";
 
-const ICON_MAP = {
-  mic:     RiMicLine,
-  book:    RiBookOpenLine,
-  global:  RiGlobalLine,
-  archive: RiArchiveLine,
-} as const;
+import { voiceLibrary } from "@/config/landing-content";
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function VoiceCapabilitiesSection() {
-  return (
-    <section id="voice-capabilities" className="py-24 md:py-32">
-      <div className="container mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-20">
+  const features = voiceLibrary.features as readonly { title: string; description: string }[];
+  const [featHero, ...featRest] = features;
 
-        {/* ── Platform features ─────────────────────────────────────── */}
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
-            <Badge variant="secondary" className="w-fit">Platform Features</Badge>
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
+  return (
+    <section id="voice-capabilities" className="py-24 md:py-32 bg-muted">
+      <div className="container mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-10">
+
+        {/* Section header */}
+        <div className="flex flex-col gap-4">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Platform Features</p>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-xl">
               Built for authentic, global production
             </h2>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              Every feature engineered to keep voices sounding natural across languages, regions, and content types.
+            <p className="text-base text-muted-foreground leading-relaxed max-w-sm md:text-right shrink-0">
+              Every feature engineered to keep voices sounding natural across languages, regions, and formats.
             </p>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px border border-border rounded-2xl overflow-hidden bg-border">
-            {voiceLibrary.features.map((feature) => (
-              <div
-                key={feature.title}
-                className="flex flex-col gap-4 p-6 bg-background"
-              >
-                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 text-primary">
-                  <RiCheckLine className="w-4 h-4" />
+        {/* Bento: hero left (7/12) + 3 compact stacked right (5/12) */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+
+          {/* Hero feature */}
+          <div className="md:col-span-7 flex flex-col rounded-2xl border border-border overflow-hidden">
+            <div className="flex-1 min-h-[280px] md:min-h-[400px] bg-foreground/20" />
+            <div className="p-6 flex flex-col gap-2.5 border-t border-border">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary">
+                  <RiCheckLine className="w-3 h-3" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-base font-semibold">{feature.title}</h3>
-                  <p className="text-base text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Feature</span>
+              </div>
+              <h3 className="text-xl font-semibold">{featHero!.title}</h3>
+              <p className="text-base text-muted-foreground leading-relaxed">{featHero!.description}</p>
+            </div>
+          </div>
+
+          {/* 3 compact features */}
+          <div className="md:col-span-5 flex flex-col gap-3">
+            {featRest.map((feat) => (
+              <div key={feat.title} className="flex-1 flex flex-col rounded-2xl border border-border overflow-hidden">
+                <div className="flex-1 min-h-[100px] bg-foreground/20" />
+                <div className="p-5 flex flex-col gap-1.5 border-t border-border">
+                  <h3 className="text-base font-semibold">{feat.title}</h3>
+                  <p className="text-base text-muted-foreground leading-snug">{feat.description}</p>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
-
-        {/* ── Use cases ─────────────────────────────────────────────── */}
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col items-center text-center gap-4 max-w-2xl mx-auto">
-            <Badge variant="secondary" className="w-fit">Who It&apos;s For</Badge>
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
-              Perfect for diverse content creation
-            </h2>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              From individual creators to global enterprises — the voice library scales to every use case.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px border border-border rounded-2xl overflow-hidden bg-border">
-            {voiceLibrary.useCases.map((useCase) => {
-              const Icon = ICON_MAP[useCase.icon as keyof typeof ICON_MAP];
-              return (
-                <div
-                  key={useCase.title}
-                  className="flex flex-col gap-4 p-6 bg-background"
-                >
-                  <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 text-primary">
-                    {Icon && <Icon className="w-4 h-4" />}
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <h3 className="text-base font-semibold">{useCase.title}</h3>
-                    <p className="text-base text-muted-foreground leading-relaxed">
-                      {useCase.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
       </div>
     </section>
   );

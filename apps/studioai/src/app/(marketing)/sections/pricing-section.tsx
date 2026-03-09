@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Badge } from "@repo/ui-core/components/badge";
 import { Button } from "@repo/ui-core/components/button";
 import { RiCheckLine, RiArrowRightLine } from "@remixicon/react";
 import { pricing } from "@/config/landing-content";
+import { Badge } from "@repo/ui-core/components/badge";
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
@@ -13,14 +13,14 @@ export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(false);
 
   return (
-    <section id="pricing" className="py-24 md:py-32">
+    <section id="pricing" className="py-24 md:py-32 bg-muted/30">
       <div className="container mx-auto px-6 md:px-10 lg:px-16">
 
         {/* Section header */}
         <div className="flex flex-col items-center text-center gap-4 mb-12">
-          <Badge variant="secondary" className="w-fit">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
             {pricing.sectionBadge}
-          </Badge>
+          </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
             {pricing.sectionTitle}
           </h2>

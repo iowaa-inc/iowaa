@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Badge } from "@repo/ui-core/components/badge";
+
 import { Avatar, AvatarFallback } from "@repo/ui-core/components/avatar";
 import { testimonials } from "@/config/landing-content";
 
@@ -49,9 +49,9 @@ export function TestimonialsSection() {
 
         {/* Section header */}
         <div className="flex flex-col items-center text-center gap-4 mb-14">
-          <Badge variant="secondary" className="w-fit">
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
             {testimonials.sectionBadge}
-          </Badge>
+          </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] max-w-2xl">
             {testimonials.sectionTitle}
           </h2>
@@ -61,7 +61,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Testimonial card */}
-        <div className="rounded-2xl bg-muted/40 px-8 md:px-16 lg:px-24 py-14 md:py-20 flex flex-col items-center text-center gap-8 max-w-7xl mx-auto">
+        <div className="rounded-2xl bg-muted px-8 md:px-16 lg:px-24 py-14 md:py-20 flex flex-col items-center text-center gap-8 max-w-7xl mx-auto">
 
           {/* Avatar */}
           <Avatar className="w-14 h-14">

@@ -14,7 +14,7 @@ import { features } from "@/config/landing-content";
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-24 md:py-32 overflow-hidden">
+    <section id="features" className="py-24 md:py-32 bg-secondary overflow-hidden">
       <div className="container mx-auto px-6 md:px-10 lg:px-16">
         <Carousel
           opts={{
@@ -70,7 +70,7 @@ function CarouselNavPrev() {
     className="rounded-full"
       id="features-prev"
       aria-label="Previous features"
-      variant="secondary"
+      variant="outline"
       size="icon-lg"
       disabled={!canScrollPrev}
       onClick={scrollPrev}
@@ -87,7 +87,7 @@ function CarouselNavNext() {
     className="rounded-full"
       id="features-next"
       aria-label="Next features"
-      variant="secondary"
+      variant="outline"
       size="icon-lg"
       disabled={!canScrollNext}
       onClick={scrollNext}
@@ -111,7 +111,7 @@ function FeatureCard({ title, description }: FeatureCardProps) {
       <div
         className="
           relative w-full rounded-xl overflow-hidden
-          bg-muted
+          bg-foreground/10
           aspect-4/5
           mb-5
           transition-transform duration-300 ease-out

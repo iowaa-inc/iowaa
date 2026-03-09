@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Badge } from "@repo/ui-core/components/badge";
+
 import { howItWorks } from "@/config/landing-content";
 
 // Duration each step stays active before auto-advancing
@@ -56,9 +56,9 @@ export function HowItWorksSection() {
 
             {/* Section heading */}
             <div className="flex flex-col gap-4">
-              <Badge variant="secondary" className="w-fit">
+              <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
                 {howItWorks.sectionBadge}
-              </Badge>
+              </p>
               <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15]">
                 {howItWorks.sectionTitle}
               </h2>
